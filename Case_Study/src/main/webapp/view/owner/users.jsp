@@ -1,0 +1,323 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Người dùng - Quản Lý Nhà Trọ</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="bi bi-buildings"></i> Quản Lý Nhà Trọ
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="dashboard.jsp" class="nav-link">
+          <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="rooms.jsp" class="nav-link">
+          <i class="bi bi-door-closed"></i> Phòng
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="bookings.jsp" class="nav-link">
+          <i class="bi bi-calendar-check"></i> Đặt phòng
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="contracts.jsp" class="nav-link">
+          <i class="bi bi-file-earmark-text"></i> Hợp đồng
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="utilities.jsp" class="nav-link">
+          <i class="bi bi-lightning-fill"></i> Điện nước
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="invoices.jsp" class="nav-link">
+          <i class="bi bi-receipt"></i> Hóa đơn
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="services.jsp" class="nav-link">
+          <i class="bi bi-gear"></i> Dịch vụ
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="users.jsp" class="nav-link active">
+          <i class="bi bi-people"></i> Người dùng
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="reports.jsp" class="nav-link">
+          <i class="bi bi-bar-chart"></i> Báo cáo
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Wrapper -->
+  <div class="main-wrapper">
+    <!-- Top Navbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-greeting">Chào mừng, Chủ trọ</div>
+        <div class="topbar-search">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Tìm kiếm...">
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="profile-dropdown">
+          <button class="profile-btn" onclick="toggleProfileMenu()">
+            <div class="profile-avatar">CT</div>
+            <span>Chủ trọ</span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu-custom" id="profileMenu">
+            <div class="dropdown-item-custom">Hồ sơ cá nhân</div>
+            <div class="dropdown-item-custom">Cài đặt</div>
+            <div class="dropdown-item-custom" onclick="logout()">Đăng xuất</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="breadcrumb-nav">
+        <a href="dashboard.jsp">Trang chủ</a> / <span>Người dùng</span>
+      </div>
+
+      <div class="page-header">
+        <h1 class="page-title">Quản lý Người dùng</h1>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-section">
+        <div class="filter-group">
+          <label>Trạng thái</label>
+          <select id="statusFilter" class="form-control">
+            <option value="">-- Chọn trạng thái --</option>
+            <option value="active">Hoạt động</option>
+            <option value="locked">Bị khóa</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Tìm kiếm</label>
+          <input type="text" class="form-control" id="searchInput" placeholder="Tên hoặc SĐT">
+        </div>
+        <div class="filter-actions">
+          <button class="btn-custom btn-primary-custom">
+            <i class="bi bi-funnel"></i> Lọc
+          </button>
+          <button class="btn-custom btn-outline" onclick="resetFilters()">
+            <i class="bi bi-arrow-clockwise"></i> Đặt lại
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="card-custom">
+        <div class="table-responsive">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>KH001</strong></td>
+                <td>Nguyễn Văn A</td>
+                <td>0987654321</td>
+                <td>vana@email.com</td>
+                <td><span class="badge-custom badge-light">Khách</span></td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="viewUser()">Xem</button>
+                    <button class="btn-custom btn-primary-custom" onclick="editUser()">Sửa</button>
+                    <button class="btn-custom btn-danger">Khóa</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>KH002</strong></td>
+                <td>Trần Thị B</td>
+                <td>0912345678</td>
+                <td>thib@email.com</td>
+                <td><span class="badge-custom badge-light">Khách</span></td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="viewUser()">Xem</button>
+                    <button class="btn-custom btn-primary-custom" onclick="editUser()">Sửa</button>
+                    <button class="btn-custom btn-danger">Khóa</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>KH003</strong></td>
+                <td>Phạm Minh C</td>
+                <td>0901234567</td>
+                <td>minc@email.com</td>
+                <td><span class="badge-custom badge-light">Khách</span></td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="viewUser()">Xem</button>
+                    <button class="btn-custom btn-primary-custom" onclick="editUser()">Sửa</button>
+                    <button class="btn-custom btn-danger">Khóa</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>KH004</strong></td>
+                <td>Lê Thị D</td>
+                <td>0923456789</td>
+                <td>thid@email.com</td>
+                <td><span class="badge-custom badge-light">Khách</span></td>
+                <td><span class="badge-custom badge-danger">Bị khóa</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="viewUser()">Xem</button>
+                    <button class="btn-custom btn-primary-custom" onclick="editUser()">Sửa</button>
+                    <button class="btn-custom btn-success">Mở khóa</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>ADM001</strong></td>
+                <td>Chủ trọ Admin</td>
+                <td>0909999999</td>
+                <td>admin@rental.com</td>
+                <td><span class="badge-custom badge-info">Chủ</span></td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="viewUser()">Xem</button>
+                    <button class="btn-custom btn-primary-custom" onclick="editUser()">Sửa</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Modal -->
+  <div class="modal-overlay" id="userModal">
+    <div class="modal-content" style="max-width: 550px;">
+      <div class="modal-header">
+        <h5 id="userModalTitle">Xem Người dùng</h5>
+        <button class="modal-close-btn" onclick="closeUserModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">ID</label>
+          <input type="text" class="form-control" value="KH001" disabled>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Họ tên</label>
+          <input type="text" class="form-control" value="Nguyễn Văn A">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Số điện thoại</label>
+          <input type="tel" class="form-control" value="0987654321" disabled>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" value="vana@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">CCCD/CMND</label>
+          <input type="text" class="form-control" value="123456789012">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Địa chỉ</label>
+          <input type="text" class="form-control" value="123 Đường ABC, Quận 1, TP HCM">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ngày sinh</label>
+          <input type="date" class="form-control" value="1990-05-15">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Trạng thái</label>
+          <select class="form-control">
+            <option selected>Hoạt động</option>
+            <option>Bị khóa</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-custom btn-secondary" onclick="closeUserModal()">Hủy</button>
+        <button class="btn-custom btn-primary-custom" id="saveBtnUser">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function viewUser() {
+      document.getElementById('userModalTitle').textContent = 'Xem Người dùng';
+      document.getElementById('saveBtnUser').style.display = 'none';
+      document.getElementById('userModal').classList.add('show');
+    }
+
+    function editUser() {
+      document.getElementById('userModalTitle').textContent = 'Chỉnh sửa Người dùng';
+      document.getElementById('saveBtnUser').style.display = 'inline-block';
+      document.getElementById('userModal').classList.add('show');
+    }
+
+    function closeUserModal() {
+      document.getElementById('userModal').classList.remove('show');
+    }
+
+    function resetFilters() {
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('searchInput').value = '';
+    }
+
+    function toggleProfileMenu() {
+      const menu = document.getElementById('profileMenu');
+      menu.classList.toggle('show');
+    }
+
+    function logout() {
+      window.location.href = 'login.jsp';
+    }
+
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('profileMenu');
+      const btn = document.querySelector('.profile-btn');
+      if (menu && btn && !menu.contains(event.target) && !btn.contains(event.target)) {
+        menu.classList.remove('show');
+      }
+    });
+
+    document.getElementById('userModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeUserModal();
+      }
+    });
+  </script>
+</body>
+</html>
