@@ -12,9 +12,9 @@
     <meta name="keywords" content="bootstrap, bootstrap4"/>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/home/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/home/css/tiny-slider.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/home/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/user/css/tiny-slider.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/user/css/style.css">
     <!-- Bootstrap CSS -->
 
     <title>Tìm nhà giá rẻ có Hiếu lo</title>
@@ -35,17 +35,17 @@
 
         <div class="collapse navbar-collapse" id="navbarsFurni">
             <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-                <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/view/home/home.jsp">Trang chủ</a></li>
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/home/room.jsp">Phòng trọ</a></li>
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/home/details_room.jsp">Chi tiết phòng</a></li>
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/home/contact.jsp">Liên hệ</a></li>
+                <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/view/user/home.jsp">Trang chủ</a></li>
+                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/room.jsp">Phòng trọ</a></li>
+                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/details_room.jsp">Chi tiết phòng</a></li>
+                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/contact.jsp">Liên hệ</a></li>
             </ul>
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
                 <li><a class="nav-link" href="#"><img
-                        src="${pageContext.request.contextPath}/view/home/images/user.svg"></a></li>
+                        src="${pageContext.request.contextPath}/view/user/images/user.svg"></a></li>
                 <li><a class="nav-link" href="cart.html"><img
-                        src="${pageContext.request.contextPath}/view/home/images/cart.svg"></a></li>
+                        src="${pageContext.request.contextPath}/view/user/images/cart.svg"></a></li>
             </ul>
         </div>
     </div>
@@ -70,7 +70,7 @@
             </div>
             <div class="col-lg-7">
                 <div class="">
-                    <img src="${pageContext.request.contextPath}/view/home/img_house/home1.png"
+                    <img src="${pageContext.request.contextPath}/view/user/img_house/home1.png"
                          style="padding: 0% 20% 0% 20%; width: 130%;">
                 </div>
             </div>
@@ -97,13 +97,13 @@
             <!-- Start Column 2 -->
             <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
                 <a class="product-item" href="cart.html">
-                    <img src="${pageContext.request.contextPath}/view/home/img_house/phong101.jpg"
+                    <img src="${pageContext.request.contextPath}/view/user/img_house/phong101.jpg"
                          class="img-fluid product-thumbnail">
                     <h3 class="product-title">Tầng 1</h3>
                     <strong class="product-price">3.000.000 VND</strong>
 
                     <span class="icon-cross">
-                            <img src="${pageContext.request.contextPath}/view/home/images/cross.svg" class="img-fluid">
+                            <img src="${pageContext.request.contextPath}/view/user/images/cross.svg" class="img-fluid">
                         </span>
                 </a>
             </div>
@@ -112,13 +112,13 @@
             <!-- Start Column 3 -->
             <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
                 <a class="product-item" href="cart.html">
-                    <img src="${pageContext.request.contextPath}/view/home/img_house/phong201.jpg"
+                    <img src="${pageContext.request.contextPath}/view/user/img_house/phong201.jpg"
                          class="img-fluid product-thumbnail">
                     <h3 class="product-title">Tầng 3</h3>
                     <strong class="product-price">3.500.000</strong>
 
                     <span class="icon-cross">
-                            <img src="${pageContext.request.contextPath}/view/home/images/cross.svg" class="img-fluid">
+                            <img src="${pageContext.request.contextPath}/view/user/images/cross.svg" class="img-fluid">
                         </span>
                 </a>
             </div>
@@ -127,13 +127,13 @@
             <!-- Start Column 4 -->
             <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
                 <a class="product-item" href="cart.html">
-                    <img src="${pageContext.request.contextPath}/view/home/img_house/phong303.jpeg"
+                    <img src="${pageContext.request.contextPath}/view/user/img_house/phong303.jpeg"
                          class="img-fluid product-thumbnail">
                     <h3 class="product-title">Tầng 4</h3>
                     <strong class="product-price">3.700.000</strong>
 
                     <span class="icon-cross">
-                            <img src="${pageContext.request.contextPath}/view/home/images/cross.svg" class="img-fluid">
+                            <img src="${pageContext.request.contextPath}/view/user/images/cross.svg" class="img-fluid">
                         </span>
                 </a>
             </div>
@@ -157,7 +157,7 @@
                     <div class="col-6 col-md-6">
                         <div class="feature">
                             <div class="icon">
-                                <img src="${pageContext.request.contextPath}/view/home/images/truck.svg" alt="Image"
+                                <img src="${pageContext.request.contextPath}/view/user/images/truck.svg" alt="Image"
                                      class="imf-fluid">
                             </div>
                             <h3>Xem phòng nhanh – Đặt lịch dễ dàng</h3>
@@ -169,7 +169,7 @@
                     <div class="col-6 col-md-6">
                         <div class="feature">
                             <div class="icon">
-                                <img src="${pageContext.request.contextPath}/view/home/images/bag.svg" alt="Image"
+                                <img src="${pageContext.request.contextPath}/view/user/images/bag.svg" alt="Image"
                                      class="imf-fluid">
                             </div>
                             <h3>Giá rõ ràng – Không phí ẩn</h3>
@@ -182,7 +182,7 @@
                     <div class="col-6 col-md-6">
                         <div class="feature">
                             <div class="icon">
-                                <img src="${pageContext.request.contextPath}/view/home/images/return.svg" alt="Image"
+                                <img src="${pageContext.request.contextPath}/view/user/images/return.svg" alt="Image"
                                      class="imf-fluid">
                             </div>
                             <h3>Hỗ trợ 24/7</h3>
@@ -194,7 +194,7 @@
                     <div class="col-6 col-md-6">
                         <div class="feature">
                             <div class="icon">
-                                <img src="${pageContext.request.contextPath}/view/home/images/return.svg" alt="Image"
+                                <img src="${pageContext.request.contextPath}/view/user/images/return.svg" alt="Image"
                                      class="imf-fluid">
                             </div>
                             <h3>Hợp đồng rõ ràng – An tâm thuê ở</h3>
@@ -346,7 +346,7 @@
 
                                         <div class="author-info">
                                             <div class="author-pic">
-                                                <img src="${pageContext.request.contextPath}/view/home/images/person-1.png"
+                                                <img src="${pageContext.request.contextPath}/view/user/images/person-1.png"
                                                      alt="Maria Jones" class="img-fluid">
                                             </div>
                                             <h3 class="font-weight-bold">Van Hieu</h3>
@@ -375,7 +375,7 @@
 
                                         <div class="author-info">
                                             <div class="author-pic">
-                                                <img src="${pageContext.request.contextPath}/view/home/images/person-1.png"
+                                                <img src="${pageContext.request.contextPath}/view/user/images/person-1.png"
                                                      alt="Maria Jones" class="img-fluid">
                                             </div>
                                             <h3 class="font-weight-bold">Trung Hiếu</h3>
@@ -407,7 +407,7 @@
 
                                         <div class="author-info">
                                             <div class="author-pic">
-                                                <img src="${pageContext.request.contextPath}/view/home/images/person-1.png"
+                                                <img src="${pageContext.request.contextPath}/view/user/images/person-1.png"
                                                      alt="Maria Jones" class="img-fluid">
                                             </div>
                                             <h3 class="font-weight-bold">Anh Thư</h3>
@@ -446,7 +446,7 @@
             <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
                 <div class="post-entry">
                     <a href="#" class="post-thumbnail"><img
-                            src="${pageContext.request.contextPath}/view/home/img_house/p401.png" alt="Image"
+                            src="${pageContext.request.contextPath}/view/user/img_house/p401.png" alt="Image"
                             class="img-fluid"></a>
                     <div class="post-content-entry">
                         <h3><a href="#">Kinh nghiệm thuê trọ lần đầu (tránh bị “hớ”)</a></h3>
@@ -460,7 +460,7 @@
             <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
                 <div class="post-entry">
                     <a href="#" class="post-thumbnail"><img
-                            src="${pageContext.request.contextPath}/view/home/img_house/p402.png" alt="Image"
+                            src="${pageContext.request.contextPath}/view/user/img_house/p402.png" alt="Image"
                             class="img-fluid"></a>
                     <div class="post-content-entry">
                         <h3><a href="#">Checklist xem phòng trọ: 10 điều phải kiểm tra trước khi chốt</a></h3>
@@ -474,7 +474,7 @@
             <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
                 <div class="post-entry">
                     <a href="#" class="post-thumbnail"><img
-                            src="${pageContext.request.contextPath}/view/home/img_house/p403.png" alt="Image"
+                            src="${pageContext.request.contextPath}/view/user/img_house/p403.png" alt="Image"
                             class="img-fluid"></a>
                     <div class="post-content-entry">
                         <h3><a href="#">Phòng nhỏ vẫn tiện nghi: mẹo sắp xếp gọn đẹp, tiết kiệm diện tích</a></h3>
@@ -495,14 +495,14 @@
     <div class="container relative">
 
         <div class="sofa-img">
-            <img src="${pageContext.request.contextPath}/view/home/img_house/house2.png" alt="Image" class="img-fluid">
+            <img src="${pageContext.request.contextPath}/view/user/img_house/house2.png" alt="Image" class="img-fluid">
         </div>
 
         <div class="row">
             <div class="col-lg-8">
                 <div class="subscription-form">
                     <h3 class="d-flex align-items-center"><span class="me-1"><img
-                            src="${pageContext.request.contextPath}/view/home/images/envelope-outline.svg"
+                            src="${pageContext.request.contextPath}/view/user/images/envelope-outline.svg"
                             alt="Image" class="img-fluid"></span><span>Đăng ký nhận thông tin phòng mới
                             </span>
                     </h3>
@@ -599,9 +599,9 @@
     </div>
 </footer>
 <!-- End Footer Section -->
-<script src="${pageContext.request.contextPath}/view/home/js/bootstrap.bundle.min.js"></script>
-<script src="${pageContext.request.contextPath}/view/home/js/tiny-slider.js"></script>
-<script src="${pageContext.request.contextPath}/view/home/js/custom.js"></script>
+<script src="${pageContext.request.contextPath}/view/user/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/view/user/js/tiny-slider.js"></script>
+<script src="${pageContext.request.contextPath}/view/user/js/custom.js"></script>
 
 </body>
 

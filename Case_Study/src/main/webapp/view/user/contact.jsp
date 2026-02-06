@@ -17,9 +17,9 @@
     <meta name="description" content=""/>
     <meta name="keywords" content="bootstrap, bootstrap4"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/home/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/home/css/tiny-slider.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/home/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/user/css/tiny-slider.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/user/css/style.css">
     <!-- Bootstrap CSS -->
 
     <title>Tìm nhà giá rẻ có Hiếu lo</title>
@@ -40,17 +40,17 @@
 
         <div class="collapse navbar-collapse" id="navbarsFurni">
             <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/home/home.jsp">Trang chủ</a></li>
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/home/room.jsp">Phòng trọ</a></li>
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/home/details_room.jsp">Chi tiết phòng</a></li>
-                <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/view/home/contact.jsp">Liên hệ</a></li>
+                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/home.jsp">Trang chủ</a></li>
+                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/room.jsp">Phòng trọ</a></li>
+                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/details_room.jsp">Chi tiết phòng</a></li>
+                <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/view/user/contact.jsp">Liên hệ</a></li>
             </ul>
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
                 <li><a class="nav-link" href="#"><img
-                        src="${pageContext.request.contextPath}/view/home/images/user.svg"></a></li>
+                        src="${pageContext.request.contextPath}/view/user/images/user.svg"></a></li>
                 <li><a class="nav-link" href="cart.html"><img
-                        src="${pageContext.request.contextPath}/view/home/images/cart.svg"></a></li>
+                        src="${pageContext.request.contextPath}/view/user/images/cart.svg"></a></li>
             </ul>
         </div>
     </div>
@@ -177,14 +177,14 @@
     <div class="container relative">
 
         <div class="sofa-img">
-            <img src="${pageContext.request.contextPath}/view/home/img_house/house2.png" alt="Image" class="img-fluid">
+            <img src="${pageContext.request.contextPath}/view/user/img_house/house2.png" alt="Image" class="img-fluid">
         </div>
 
         <div class="row">
             <div class="col-lg-8">
                 <div class="subscription-form">
                     <h3 class="d-flex align-items-center"><span class="me-1"><img
-                            src="${pageContext.request.contextPath}/view/home/images/envelope-outline.svg"
+                            src="${pageContext.request.contextPath}/view/user/images/envelope-outline.svg"
                             alt="Image" class="img-fluid"></span><span>Đăng ký nhận thông tin phòng mới
                             </span>
                     </h3>
@@ -281,9 +281,9 @@
     </div>
 </footer>
 <!-- End Footer Section -->
-<script src="${pageContext.request.contextPath}/view/home/js/bootstrap.bundle.min.js"></script>
-<script src="${pageContext.request.contextPath}/view/home/js/tiny-slider.js"></script>
-<script src="${pageContext.request.contextPath}/view/home/js/custom.js"></script>
+<script src="${pageContext.request.contextPath}/view/user/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/view/user/js/tiny-slider.js"></script>
+<script src="${pageContext.request.contextPath}/view/user/js/custom.js"></script>
 
 </body>
 
