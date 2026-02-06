@@ -1,0 +1,301 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dịch vụ - Quản Lý Nhà Trọ</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="bi bi-buildings"></i> Quản Lý Nhà Trọ
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="dashboard.jsp" class="nav-link">
+          <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="rooms.jsp" class="nav-link">
+          <i class="bi bi-door-closed"></i> Phòng
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="bookings.jsp" class="nav-link">
+          <i class="bi bi-calendar-check"></i> Đặt phòng
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="contracts.jsp" class="nav-link">
+          <i class="bi bi-file-earmark-text"></i> Hợp đồng
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="utilities.jsp" class="nav-link">
+          <i class="bi bi-lightning-fill"></i> Điện nước
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="invoices.jsp" class="nav-link">
+          <i class="bi bi-receipt"></i> Hóa đơn
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="services.jsp" class="nav-link active">
+          <i class="bi bi-gear"></i> Dịch vụ
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="users.jsp" class="nav-link">
+          <i class="bi bi-people"></i> Người dùng
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="reports.jsp" class="nav-link">
+          <i class="bi bi-bar-chart"></i> Báo cáo
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Wrapper -->
+  <div class="main-wrapper">
+    <!-- Top Navbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-greeting">Chào mừng, Chủ trọ</div>
+        <div class="topbar-search">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Tìm kiếm...">
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="profile-dropdown">
+          <button class="profile-btn" onclick="toggleProfileMenu()">
+            <div class="profile-avatar">CT</div>
+            <span>Chủ trọ</span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu-custom" id="profileMenu">
+            <div class="dropdown-item-custom">Hồ sơ cá nhân</div>
+            <div class="dropdown-item-custom">Cài đặt</div>
+            <div class="dropdown-item-custom" onclick="logout()">Đăng xuất</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="breadcrumb-nav">
+        <a href="dashboard.jsp">Trang chủ</a> / <span>Cấu hình dịch vụ</span>
+      </div>
+
+      <div class="page-header">
+        <h1 class="page-title">Cấu hình Dịch vụ</h1>
+        <button class="btn-custom btn-primary-custom" onclick="openServiceModal()">
+          <i class="bi bi-plus-lg"></i> Thêm dịch vụ
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="card-custom">
+        <div class="table-responsive">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th>Mã DV</th>
+                <th>Tên dịch vụ</th>
+                <th>Loại</th>
+                <th>Đơn vị tính</th>
+                <th>Đơn giá (VND)</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>DV001</strong></td>
+                <td>Tiền thuê phòng</td>
+                <td><span class="badge-custom badge-info">Cố định</span></td>
+                <td>Lần/tháng</td>
+                <td>-</td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
+                    <button class="btn-custom btn-danger">Xóa</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>DV002</strong></td>
+                <td>Điện</td>
+                <td><span class="badge-custom badge-light">Chỉ số</span></td>
+                <td>kWh</td>
+                <td>5,000</td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
+                    <button class="btn-custom btn-danger">Xóa</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>DV003</strong></td>
+                <td>Nước</td>
+                <td><span class="badge-custom badge-light">Chỉ số</span></td>
+                <td>m³</td>
+                <td>25,000</td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
+                    <button class="btn-custom btn-danger">Xóa</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>DV004</strong></td>
+                <td>Wifi</td>
+                <td><span class="badge-custom badge-info">Cố định</span></td>
+                <td>Lần/tháng</td>
+                <td>200,000</td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
+                    <button class="btn-custom btn-danger">Xóa</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>DV005</strong></td>
+                <td>Dịch vụ vệ sinh</td>
+                <td><span class="badge-custom badge-info">Cố định</span></td>
+                <td>Lần/tháng</td>
+                <td>150,000</td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
+                    <button class="btn-custom btn-danger">Xóa</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>DV006</strong></td>
+                <td>Gửi xe máy</td>
+                <td><span class="badge-custom badge-info">Cố định</span></td>
+                <td>Lần/tháng</td>
+                <td>50,000</td>
+                <td><span class="badge-custom badge-success">Hoạt động</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
+                    <button class="btn-custom btn-danger">Xóa</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Modal -->
+  <div class="modal-overlay" id="serviceModal">
+    <div class="modal-content" style="max-width: 550px;">
+      <div class="modal-header">
+        <h5 id="serviceModalTitle">Thêm Dịch vụ mới</h5>
+        <button class="modal-close-btn" onclick="closeServiceModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Mã dịch vụ</label>
+          <input type="text" class="form-control" placeholder="DV001">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tên dịch vụ</label>
+          <input type="text" class="form-control" placeholder="Ví dụ: Wifi, Điện, Nước...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Loại dịch vụ</label>
+          <select class="form-control">
+            <option value="">-- Chọn loại --</option>
+            <option value="chi_so">Chỉ số (tính theo số lượng)</option>
+            <option value="co_dinh">Cố định (không tính chỉ số)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Đơn vị tính</label>
+          <input type="text" class="form-control" placeholder="kWh, m³, Lần/tháng...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Đơn giá (VND)</label>
+          <input type="number" class="form-control" placeholder="5000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Trạng thái</label>
+          <select class="form-control">
+            <option selected>Hoạt động</option>
+            <option>Không hoạt động</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-custom btn-secondary" onclick="closeServiceModal()">Hủy</button>
+        <button class="btn-custom btn-primary-custom">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function openServiceModal() {
+      document.getElementById('serviceModalTitle').textContent = 'Thêm Dịch vụ mới';
+      document.getElementById('serviceModal').classList.add('show');
+    }
+
+    function editService() {
+      document.getElementById('serviceModalTitle').textContent = 'Chỉnh sửa Dịch vụ';
+      document.getElementById('serviceModal').classList.add('show');
+    }
+
+    function closeServiceModal() {
+      document.getElementById('serviceModal').classList.remove('show');
+    }
+
+    function toggleProfileMenu() {
+      const menu = document.getElementById('profileMenu');
+      menu.classList.toggle('show');
+    }
+
+    function logout() {
+      window.location.href = 'login.jsp';
+    }
+
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('profileMenu');
+      const btn = document.querySelector('.profile-btn');
+      if (menu && btn && !menu.contains(event.target) && !btn.contains(event.target)) {
+        menu.classList.remove('show');
+      }
+    });
+
+    document.getElementById('serviceModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeServiceModal();
+      }
+    });
+  </script>
+</body>
+</html>
