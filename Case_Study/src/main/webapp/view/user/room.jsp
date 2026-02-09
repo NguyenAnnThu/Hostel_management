@@ -45,7 +45,7 @@
             <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
                 <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/home.jsp">Trang chủ</a></li>
                 <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/view/user/room.jsp">Phòng trọ</a></li>
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/details_room.jsp">Chi tiết phòng</a></li>
+                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/detailsRoom.jsp">Chi tiết phòng</a></li>
                 <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/contact.jsp">Liên hệ</a></li>
             </ul>
 
