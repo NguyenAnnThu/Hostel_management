@@ -37,12 +37,12 @@
             <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
                 <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/view/user/home.jsp">Trang chủ</a></li>
                 <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/room.jsp">Phòng trọ</a></li>
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/details_room.jsp">Chi tiết phòng</a></li>
+                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/detailsRoom.jsp">Chi tiết phòng</a></li>
                 <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/contact.jsp">Liên hệ</a></li>
             </ul>
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-                <li><a class="nav-link" href="#"><img
+                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/owner/login.jsp"><img
                         src="${pageContext.request.contextPath}/view/user/images/user.svg"></a></li>
                 <li><a class="nav-link" href="cart.html"><img
                         src="${pageContext.request.contextPath}/view/user/images/cart.svg"></a></li>
