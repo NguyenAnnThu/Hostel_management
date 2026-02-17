@@ -1,4 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.example.case_study.entity.Account" %>
+<%@ page import="com.example.case_study.entity.User" %>
+
+<%
+    Account account = (Account) session.getAttribute("account");
+    User user = null;
+    if (account != null) {
+        user = account.getUser();
+    }
+%>
 
 <html lang="en">
 
@@ -42,8 +52,50 @@
             </ul>
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/owner/login.jsp"><img
-                        src="${pageContext.request.contextPath}/view/user/images/user.svg"></a></li>
+                <li class="nav-item dropdown">
+                    <%
+                        if (user == null) {
+                    %>
+                    <!-- CHƯA LOGIN -->
+                    <a class="nav-link" href="${pageContext.request.contextPath}/view/owner/login.jsp"><img
+                        src="${pageContext.request.contextPath}/view/user/images/user.svg">
+                    </a>
+                    <%
+                    } else {
+                    %>
+                    <!-- ĐÃ LOGIN -->
+                    <a class="nav-link dropdown-toggle d-flex align-items-center"
+                       href="#"
+                       id="userDropdown"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+
+                        <img src="${pageContext.request.contextPath}/view/user/images/user.svg"
+                             style="width:20px; margin-right:6px;">
+                        <span style="color:white; font-size:14px;">
+                <%= user.getFullName() %>
+            </span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li>
+                            <a class="dropdown-item"
+                               href="${pageContext.request.contextPath}/account?action=profile">
+                                <i class="fa fa-user me-2"></i> Hồ sơ cá nhân
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item"
+                               href="${pageContext.request.contextPath}/account?action=logout">
+                                <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                    <%
+                        }
+                    %>
+                </li>
                 <li><a class="nav-link" href="cart.html"><img
                         src="${pageContext.request.contextPath}/view/user/images/cart.svg"></a></li>
             </ul>

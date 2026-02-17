@@ -22,10 +22,12 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     compileOnly('jakarta.servlet:jakarta.servlet-api:5.0.0')
-
+    // Source: https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation("mysql:mysql-connector-java:8.0.33")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation 'org.mindrot:jbcrypt:0.4'
 }
 
 test {

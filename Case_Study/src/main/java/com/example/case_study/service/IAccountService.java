@@ -1,19 +1,15 @@
 package com.example.case_study.service;
 
 import com.example.case_study.entity.Account;
+
+import java.util.Date;
 import java.util.List;
 
 public interface IAccountService {
 
-    List<Account> getAllAccounts();
-
-    boolean addAccount(Account account);
-
-    boolean deleteAccount(String phone);
-
-    boolean updateAccount(Account account);
-
-    Account findAccountByName(String name);
-
-    Account findAccountByPhone(String phone);
+    Account login(String phone, String password);
+    Account getByPhone(String phone);
+    String register(String fullName, String phone, String email,
+                    String citizenId, String address, Date dob, String password);
+    String resetPassword(String phone, String newPassword);
 }
