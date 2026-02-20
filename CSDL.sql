@@ -161,6 +161,7 @@ CREATE TABLE invoice_details (
     FOREIGN KEY (service_code) REFERENCES services(service_code)
 );
 
+
 /* ================= PAYMENT CONFIRMATION ================= */
 CREATE TABLE payment_confirmations (
     confirmation_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -171,7 +172,7 @@ CREATE TABLE payment_confirmations (
     FOREIGN KEY (invoice_id) REFERENCES invoices(invoice_id),
     FOREIGN KEY (confirmed_by) REFERENCES users(user_id)
 );
-
+drop table payment_confirmations;
 /*================== INSERT DU LIEU================*/
 
 -- ================= USERS =================
@@ -190,7 +191,8 @@ VALUES
 ('U00008', 'Dang Quoc Viet', '0900000008', 'viet@gmail.com', 'locked', '012345678908', 'Thu Duc', '2001-12-01'),
 ('U00009', 'Support Staff', '0900000009', 'support@cs.com', 'active', '012345678909', 'HCM City', '1992-04-04'),
 ('U00010', 'Test User', '0900000010', 'test@cs.com', 'active', '012345678910', 'Binh Thanh', '2002-02-02');
-
+select* from users;
+select* from accounts;
 -- ================= ACCOUNTS =================
 INSERT INTO accounts (phone, password, role)
 VALUES
@@ -207,7 +209,8 @@ VALUES
 
 ('0900000009', '$2a$12$supporthashedpasswordxxxxxxxxxxxx', 'ADMIN'),
 ('0900000010', '$2a$12$testhashedpasswordxxxxxxxxxxxx', 'TENANT');
-
+ 
+ select* from rooms;
 -- ================= ROOMS =================
 INSERT INTO rooms (room_id, floor, area, price, max_occupants, description, status)
 VALUES
@@ -217,6 +220,8 @@ VALUES
 ('R202', 2, 22, 2700000, 2, 'Quiet room', 'maintenance'),
 ('R301', 3, 30, 3500000, 4, 'Premium room', 'rented');
 
+
+ select* from services;
 -- ================= SERVICES =================
 INSERT INTO services (service_code, service_name, service_type, unit, default_price, status)
 VALUES
@@ -226,6 +231,7 @@ VALUES
 ('WIFI', 'Internet', 'fixed', 'month', 100000, 'active'),
 ('MANAGE', 'Management Fee', 'fixed', 'month', 50000, 'active');
 
+ select* from assets;
 -- ================= ASSETS =================
 INSERT INTO assets (asset_code, asset_name, asset_type, total_quantity, available_quantity, status)
 VALUES
@@ -235,6 +241,7 @@ VALUES
 ('FAN', 'Fan', 'electronic', 8, 3, 'available');
 
 -- ================= ROOM_ASSETS =================
+SELECT * FROM room_assets;
 INSERT INTO room_assets (room_id, asset_code, quantity)
 VALUES
 ('R101', 'BED', 1),
@@ -246,10 +253,6 @@ VALUES
 ('R301', 'BED', 1),
 ('R301', 'FAN', 1);
 
--- ================= PAYMENT_CONFIRMATIONS =================
-INSERT INTO payment_confirmations (invoice_id, confirmed_by, confirmed_at, note)
-VALUES
-(1, 'U00001', '2025-02-28 20:15:00', 'Payment confirmed by admin');
 
 select *from service_price_config;
 -- ================= SERVICE_PRICE_CONFIG =================
@@ -290,6 +293,15 @@ VALUES
 ('R101', 'ELEC', 3, 2025, 1250, 1305, '2025-03-31'),
 ('R101', 'WATER', 3, 2025, 33, 36, '2025-03-31');
 
+SELECT * FROM invoice_details;
+-- ================= PAYMENT_CONFIRMATIONS =================
+SELECT * FROM payment_confirmations;
+INSERT INTO payment_confirmations (invoice_id, confirmed_by, confirmed_at, note)
+VALUES
+(3, 'U00001', '2025-02-28 20:15:00', 'Payment confirmed by admin');
+
+SELECT invoice_id, month, year, status
+FROM invoices;
 
 -- ================= INVOICES =================
 INSERT INTO invoices (contract_id, room_id, customer_id, month, year, status)
@@ -297,19 +309,43 @@ VALUES
 (1, 'R101', 'U00003', 2, 2025, 'paid'),
 (1, 'R101', 'U00003', 3, 2025, 'unpaid');
 
--- ================= INVOICE_DETAILS =================
+
 INSERT INTO invoice_details (invoice_id, service_code, quantity, unit_price)
 VALUES
--- Feb
-(1, 'ELEC', 50, 3500),
-(1, 'WATER', 3, 15000),
-(1, 'GARBAGE', 1, 30000),
-(1, 'WIFI', 1, 100000),
-(1, 'MANAGE', 1, 50000),
+-- Invoice PAID
+(3, 'ELEC', 50, 3500),
+(3, 'WATER', 3, 15000),
+(3, 'GARBAGE', 1, 30000),
+(3, 'WIFI', 1, 100000),
+(3, 'MANAGE', 1, 50000),
 
--- Mar
-(2, 'ELEC', 55, 3500),
-(2, 'WATER', 3, 15000),
-(2, 'GARBAGE', 1, 30000),
-(2, 'WIFI', 1, 100000),
-(2, 'MANAGE', 1, 50000);
+-- Invoice UNPAID
+(4, 'ELEC', 55, 3500),
+(4, 'WATER', 3, 15000),
+(4, 'GARBAGE', 1, 30000),
+(4, 'WIFI', 1, 100000),
+(4, 'MANAGE', 1, 50000);
+SELECT invoice_id, contract_id, month, year, status
+FROM invoices;
+
+
+SELECT 
+    s.service_name,
+    SUM(d.quantity * d.unit_price) AS revenue
+FROM invoice_details d
+JOIN invoices i ON d.invoice_id = i.invoice_id
+JOIN services s ON d.service_code = s.service_code
+WHERE i.status = 'paid'
+GROUP BY s.service_name;
+SELECT * 
+FROM invoice_details
+WHERE invoice_id = 1;
+
+SELECT 
+    i.room_id,
+    SUM(d.quantity * d.unit_price) AS revenue
+FROM invoices i
+JOIN invoice_details d ON i.invoice_id = d.invoice_id
+WHERE i.status = 'paid'
+GROUP BY i.room_id;
+
