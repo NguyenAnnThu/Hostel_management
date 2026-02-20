@@ -4,20 +4,20 @@
    ======================== */
 
 :root {
-  --primary-light: #e8f4ff;
-  --primary-main: #5dade2;
-  --primary-dark: #2e86ab;
-  --primary-darker: #1c5380;
-  --accent: #3498db;
+  --primary-light: #e3f0fa;
+  --primary-main: #154e9e;
+  --primary-dark: #0f3a77;
+  --primary-darker: #092857;
+  --accent: #1a5fb8;
   --success: #27ae60;
   --warning: #f39c12;
   --danger: #e74c3c;
   --dark: #2c3e50;
   --light: #f5f9ff;
-  --border: #d4e6f1;
+  --border: #c5d9f0;
   --text-muted: #7f8c8d;
-  --box-shadow: 0 2px 8px rgba(93, 173, 226, 0.1);
-  --box-shadow-hover: 0 4px 16px rgba(93, 173, 226, 0.2);
+  --box-shadow: 0 2px 8px rgba(21, 78, 158, 0.1);
+  --box-shadow-hover: 0 4px 16px rgba(21, 78, 158, 0.2);
 }
 
 * {
@@ -151,7 +151,7 @@ body {
 .topbar-search input:focus {
   outline: none;
   border-color: var(--primary-main);
-  box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.1);
+  box-shadow: 0 0 0 3px rgba(21, 78, 158, 0.1);
 }
 
 .topbar-search i {
@@ -352,7 +352,7 @@ body {
 .form-control:focus {
   outline: none;
   border-color: var(--primary-main);
-  box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.1);
+  box-shadow: 0 0 0 3px rgba(21, 78, 158, 0.1);
 }
 
 .form-group {
@@ -512,7 +512,7 @@ body {
 }
 
 .table-custom tbody tr:hover {
-  background-color: rgba(93, 173, 226, 0.05);
+  background-color: rgba(21, 78, 158, 0.05);
 }
 
 .table-custom tbody tr:last-child td {
@@ -705,7 +705,7 @@ body {
 .filter-group input:focus {
   outline: none;
   border-color: var(--primary-main);
-  box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.1);
+  box-shadow: 0 0 0 3px rgba(21, 78, 158, 0.1);
 }
 
 .filter-actions {

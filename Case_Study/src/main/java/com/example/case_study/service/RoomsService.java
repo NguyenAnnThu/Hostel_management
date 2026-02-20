@@ -3,6 +3,8 @@ package com.example.case_study.service;
 import com.example.case_study.entity.Rooms;
 import com.example.case_study.repository.IRoomsRepository;
 import com.example.case_study.repository.RoomsRepository;
+import dto.RoomDTO;
+
 import java.util.List;
 
 public class RoomsService implements IRoomsService {
@@ -14,7 +16,7 @@ public class RoomsService implements IRoomsService {
     }
 
     @Override
-    public List<Rooms> getAllRooms() {
+    public List<RoomDTO> getAllRooms() {
         return roomsRepository.getAllRooms();
     }
 
