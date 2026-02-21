@@ -1,11 +1,13 @@
 package com.example.case_study.service;
 
 import com.example.case_study.entity.Rooms;
+import dto.RoomDTO;
+
 import java.util.List;
 
 public interface IRoomsService {
 
-    List<Rooms> getAllRooms();
+    List<RoomDTO> getAllRooms();
 
     boolean addRoom(Rooms room);
 
