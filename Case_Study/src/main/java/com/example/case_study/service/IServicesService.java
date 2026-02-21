@@ -7,8 +7,7 @@ import java.util.List;
 
 public interface IServicesService {
 
-    List<Service> findAll();
-    Service findByCode(String code);
-    void save(Service service);
-    void update(Service service);
+    List<Services> getAllWithPrice();
+
+    void saveOrUpdate(Services service, double price);
 }

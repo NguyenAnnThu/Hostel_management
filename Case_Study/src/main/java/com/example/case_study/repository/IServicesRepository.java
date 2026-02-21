@@ -1,30 +1,18 @@
 package com.example.case_study.repository;
 
 import com.example.case_study.entity.Services;
+
+import java.security.Provider;
 import java.util.List;
 import java.util.Map;
 
 public interface IServicesRepository {
 
-    List<Map<String, Object>> findAllServices();
+    List<Services> findAll();
 
-    void insertService(
-            String code,
-            String name,
-            String type,
-            String unit,
-            double price,
-            String status
-    );
+    Services findByCode(String serviceCode);
 
-    void updateService(
-            String code,
-            String name,
-            String type,
-            String unit,
-            double price,
-            String status
-    );
+    void insert(Services service);
 
-    void insertServicePriceConfig(String serviceCode, double price);
+    void update(Services service);
 }

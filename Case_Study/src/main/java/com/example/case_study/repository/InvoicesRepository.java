@@ -1,112 +1,72 @@
 package com.example.case_study.repository;
 
+import com.example.case_study.common.DBConnection;
 import com.example.case_study.entity.Invoices;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class InvoicesRepository implements IInvoicesRepository {
 
-    private List<Invoices> invoicesList;
+    private static final String INSERT_SQL =
+            "INSERT INTO invoices(room_id, customer_id, month, year, qr_code, status, created_at) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, NOW())";
 
-    public InvoicesRepository() {
-        invoicesList = new ArrayList<>();
-    }
+    private static final String SELECT_ALL =
+            "SELECT * FROM invoices ORDER BY created_at DESC";
 
-    // Lấy tất cả hóa đơn
     @Override
-    public List<Invoices> getAllInvoices() {
-        return invoicesList;
-    }
+    public int save(Invoices invoice) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps =
+                     conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
-    // Thêm hóa đơn
-    @Override
-    public boolean addInvoice(Invoices invoice) {
-        if (invoice == null) return false;
+            ps.setString(1, invoice.getRoomId());
+            ps.setString(2, invoice.getCustomerId());
+            ps.setInt(3, invoice.getMonth());
+            ps.setInt(4, invoice.getYear());
+            ps.setString(5, invoice.getQrCode());
+            ps.setString(6, invoice.getStatus());
 
-        if (findById(invoice.getInvoiceId()) != null) {
-            return false; // trùng ID
-        }
+            ps.executeUpdate();
 
-        invoicesList.add(invoice);
-        return true;
-    }
-
-    // Cập nhật hóa đơn
-    @Override
-    public boolean updateInvoice(Invoices invoice) {
-        if (invoice == null) return false;
-
-        for (int i = 0; i < invoicesList.size(); i++) {
-            if (invoicesList.get(i).getInvoiceId() == invoice.getInvoiceId()) {
-                invoicesList.set(i, invoice);
-                return true;
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return false;
+        return -1;
     }
 
-    // Xóa hóa đơn
     @Override
-    public boolean deleteInvoice(int invoiceId) {
-        return invoicesList.removeIf(i -> i.getInvoiceId() == invoiceId);
-    }
+    public List<Invoices> findAll() {
+        List<Invoices> list = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_ALL);
+             ResultSet rs = ps.executeQuery()) {
 
-    // Tìm theo ID
-    @Override
-    public Invoices findById(int invoiceId) {
-        for (Invoices i : invoicesList) {
-            if (i.getInvoiceId() == invoiceId) {
-                return i;
+            while (rs.next()) {
+                list.add(new Invoices(
+                        rs.getInt("invoice_id"),
+                        rs.getString("room_id"),
+                        rs.getString("customer_id"),
+                        rs.getInt("month"),
+                        rs.getInt("year"),
+                        rs.getString("qr_code"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at")
+                ));
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return null;
-    }
-
-    // Tìm theo phòng
-    @Override
-    public List<Invoices> findByRoomId(String roomId) {
-        List<Invoices> result = new ArrayList<>();
-        for (Invoices i : invoicesList) {
-            if (i.getRoomId().equals(roomId)) {
-                result.add(i);
-            }
-        }
-        return result;
-    }
-
-    // Tìm theo khách
-    @Override
-    public List<Invoices> findByCustomerId(String customerId) {
-        List<Invoices> result = new ArrayList<>();
-        for (Invoices i : invoicesList) {
-            if (i.getCustomerId().equals(customerId)) {
-                result.add(i);
-            }
-        }
-        return result;
-    }
-
-    // Lọc theo tháng/năm
-    @Override
-    public List<Invoices> findByMonthYear(int month, int year) {
-        List<Invoices> result = new ArrayList<>();
-        for (Invoices i : invoicesList) {
-            if (i.getMonth() == month && i.getYear() == year) {
-                result.add(i);
-            }
-        }
-        return result;
-    }
-
-    // Cập nhật trạng thái hóa đơn
-    @Override
-    public boolean updateStatus(int invoiceId, String status) {
-        Invoices invoice = findById(invoiceId);
-        if (invoice == null) return false;
-
-        invoice.setStatus(status);
-        return true;
+        return list;
     }
 }

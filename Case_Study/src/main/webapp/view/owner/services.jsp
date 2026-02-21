@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -9,25 +10,67 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles.css">
+  <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/view/owner/assets/styles.css">
 </head>
 
 <body>
 
 <!-- ================= SIDEBAR ================= -->
+<!-- Sidebar -->
 <div class="sidebar">
   <div class="sidebar-logo">
     <i class="bi bi-buildings"></i> Quản Lý Nhà Trọ
   </div>
   <ul class="nav-menu">
-    <li><a href="${pageContext.request.contextPath}/dashboard" class="nav-link">Dashboard</a></li>
-    <li><a href="${pageContext.request.contextPath}/owner/rooms" class="nav-link">Phòng</a></li>
-    <li><a href="${pageContext.request.contextPath}/owner/bookings" class="nav-link">Đặt phòng</a></li>
-    <li><a href="${pageContext.request.contextPath}/owner/contracts" class="nav-link">Hợp đồng</a></li>
-    <li><a href="${pageContext.request.contextPath}/owner/invoices" class="nav-link">Hóa đơn</a></li>
-    <li><a href="${pageContext.request.contextPath}/owner/services" class="nav-link active">Dịch vụ</a></li>
+    <li class="nav-item" s>
+      <a href="${pageContext.request.contextPath}/dashboard" class="nav-link active">
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/rooms" class="nav-link ">
+        <i class="bi bi-door-closed"></i> Phòng
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/bookings" class="nav-link">
+        <i class="bi bi-calendar-check"></i> Đặt phòng
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/contracts" class="nav-link">
+        <i class="bi bi-file-earmark-text"></i> Hợp đồng
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/utilities" class="nav-link">
+        <i class="bi bi-lightning-fill"></i> Điện nước
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/invoices" class="nav-link">
+        <i class="bi bi-receipt"></i> Hóa đơn
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/services" class="nav-link">
+        <i class="bi bi-gear"></i> Dịch vụ
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/users" class="nav-link">
+        <i class="bi bi-people"></i> Người dùng
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/reports" class="nav-link">
+        <i class="bi bi-bar-chart"></i> Báo cáo
+      </a>
+    </li>
   </ul>
 </div>
+
 
 <!-- ================= MAIN ================= -->
 <div class="main-wrapper">
@@ -59,18 +102,28 @@
         <tr>
           <td><strong>${s.serviceCode}</strong></td>
           <td>${s.serviceName}</td>
+
           <td>
-                        <span class="badge ${s.serviceType eq 'fixed' ? 'bg-info' : 'bg-secondary'}">
-                            ${s.serviceType}
-                        </span>
+            <span class="badge
+              ${s.serviceType eq 'fixed' ? 'bg-info' :
+                s.serviceType eq 'electricity' ? 'bg-warning' :
+                'bg-primary'}">
+                ${s.serviceType}
+            </span>
           </td>
+
           <td>${s.unit}</td>
-          <td>${s.defaultPrice}</td>
+
           <td>
-                        <span class="badge ${s.status eq 'active' ? 'bg-success' : 'bg-danger'}">
-                            ${s.status}
-                        </span>
+            <fmt:formatNumber value="${s.defaultPrice}" type="number"/> đ
           </td>
+
+          <td>
+            <span class="badge ${s.status eq 'active' ? 'bg-success' : 'bg-danger'}">
+                ${s.status}
+            </span>
+          </td>
+
           <td>
             <button class="btn btn-sm btn-warning"
                     onclick="openEditModal(
@@ -96,15 +149,17 @@
       </c:if>
       </tbody>
     </table>
+
   </div>
 </div>
 
 <!-- ================= MODAL ================= -->
 <div class="modal fade" id="serviceModal" tabindex="-1">
   <div class="modal-dialog">
-    <form class="modal-content"
+    <form id="serviceForm"
+          class="modal-content"
           method="post"
-          action="${pageContext.request.contextPath}/owner/services/save">
+          action="${pageContext.request.contextPath}/services">
 
       <div class="modal-header">
         <h5 class="modal-title" id="modalTitle">Dịch vụ</h5>
@@ -159,22 +214,23 @@
 
 <script>
   const modal = new bootstrap.Modal(document.getElementById('serviceModal'));
+  const form = document.getElementById('serviceForm');
 
   function openCreateModal() {
     document.getElementById('modalTitle').innerText = 'Thêm dịch vụ';
-    document.querySelector('form').reset();
+    form.reset();
     document.getElementById('serviceCode').value = '';
     modal.show();
   }
 
-  function openEditModal(code, name, type, unit, price, status) {
+  function openEditModal(code, name, type, unitVal, price, statusVal) {
     document.getElementById('modalTitle').innerText = 'Chỉnh sửa dịch vụ';
-    serviceCode.value = code;
-    serviceName.value = name;
-    serviceType.value = type;
-    unit.value = unit;
-    defaultPrice.value = price;
-    document.getElementById('status').value = status;
+    document.getElementById('serviceCode').value = code;
+    document.getElementById('serviceName').value = name;
+    document.getElementById('serviceType').value = type;
+    document.getElementById('unit').value = unitVal;
+    document.getElementById('defaultPrice').value = price;
+    document.getElementById('status').value = statusVal;
     modal.show();
   }
 </script>
