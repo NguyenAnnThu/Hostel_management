@@ -2,20 +2,29 @@ package com.example.case_study.repository;
 
 import com.example.case_study.entity.Services;
 import java.util.List;
+import java.util.Map;
 
 public interface IServicesRepository {
 
-    List<Services> getAll();
+    List<Map<String, Object>> findAllServices();
 
-    boolean add(Services service);
+    void insertService(
+            String code,
+            String name,
+            String type,
+            String unit,
+            double price,
+            String status
+    );
 
-    boolean update(Services service);
+    void updateService(
+            String code,
+            String name,
+            String type,
+            String unit,
+            double price,
+            String status
+    );
 
-    boolean delete(String serviceCode);
-
-    Services findByCode(String serviceCode);
-
-    List<Services> findByType(String serviceType);
-
-    List<Services> findByStatus(String status);
+    void insertServicePriceConfig(String serviceCode, double price);
 }

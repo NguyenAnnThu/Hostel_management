@@ -8,6 +8,14 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="assets/styles.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    .add{
+      display:flex;
+      justify-content: space-around;
+    }
+
+  </style>
 </head>
 <body>
   <!-- Sidebar -->
@@ -141,10 +149,12 @@
       </div>
 
       <!-- Note -->
-      <div style="background-color: #e8f4ff; border-left: 4px solid #5dade2; padding: 15px; border-radius: 6px; margin-bottom: 25px;">
+      <div class="add" style="background-color: #e8f4ff; border-left: 4px solid #5dade2; padding: 15px; border-radius: 6px; margin-bottom: 25px;">
         <p style="margin: 0; font-size: 13px; color: #2e86ab;">
           <strong>💡 Lưu ý:</strong> Doanh thu chỉ tính hóa đơn đã thu. Khi bạn đánh dấu "Đã thu", hóa đơn sẽ được ghi nhận vào doanh thu.
         </p>
+<%--        <div><span class="material-icons">Thêm mới</span>--%>
+<%--        </div>--%>
       </div>
 
       <!-- Table -->

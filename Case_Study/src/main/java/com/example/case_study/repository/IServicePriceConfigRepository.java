@@ -2,20 +2,14 @@ package com.example.case_study.repository;
 
 import com.example.case_study.entity.ServicePriceConfig;
 import java.util.List;
+import java.util.Map;
 
 public interface IServicePriceConfigRepository {
 
-    List<ServicePriceConfig> getAll();
 
-    boolean add(ServicePriceConfig config);
+    List<Map<String, Object>> getAllServices();
 
-    boolean update(ServicePriceConfig config);
+    void createService(Map<String, String> data);
 
-    boolean delete(int configId);
-
-    ServicePriceConfig findById(int configId);
-
-    List<ServicePriceConfig> findByServiceCode(String serviceCode);
-
-    ServicePriceConfig getEffectivePrice(String serviceCode);
+    void updateService(Map<String, String> data);
 }
