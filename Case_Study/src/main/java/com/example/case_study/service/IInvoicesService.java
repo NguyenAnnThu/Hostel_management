@@ -8,4 +8,5 @@ public interface IInvoicesService {
 
     void createInvoice(Invoices invoice, List<InvoiceDetails> details);
     List<Invoices> getAll();
+    Invoices findById(int invoiceId);
 }

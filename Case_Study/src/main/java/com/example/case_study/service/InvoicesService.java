@@ -26,4 +26,8 @@ public class InvoicesService implements IInvoicesService {
     public List<Invoices> getAll() {
         return invoicesRepo.findAll();
     }
+    @Override
+    public Invoices findById(int invoiceId) {
+        return invoicesRepo.findById(invoiceId);
+    }
 }

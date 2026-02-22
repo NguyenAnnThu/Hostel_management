@@ -8,4 +8,5 @@ public interface IInvoicesRepository {
 
     int save(Invoices invoice); // trả về invoiceId
     List<Invoices> findAll();
+    Invoices findById(int invoiceId);
 }

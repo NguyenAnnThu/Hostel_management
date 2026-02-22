@@ -69,4 +69,35 @@ public class InvoicesRepository implements IInvoicesRepository {
         }
         return list;
     }
+    private static final String FIND_BY_ID_SQL =
+            "SELECT * FROM invoices WHERE invoice_id = ?";
+
+    @Override
+    public Invoices findById(int invoiceId) {
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(FIND_BY_ID_SQL)) {
+
+            ps.setInt(1, invoiceId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Invoices i = new Invoices();
+                i.setInvoiceId(rs.getInt("invoice_id"));
+                i.setRoomId(rs.getString("room_id"));
+                i.setCustomerId(rs.getString("customer_id"));
+                i.setMonth(rs.getInt("month"));
+                i.setYear(rs.getInt("year"));
+                i.setQrCode(rs.getString("qr_code"));
+                i.setStatus(rs.getString("status"));
+                i.setCreatedAt(rs.getTimestamp("created_at"));
+                return i;
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
 }

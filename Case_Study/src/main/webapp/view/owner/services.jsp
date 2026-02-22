@@ -24,7 +24,7 @@
   </div>
   <ul class="nav-menu">
     <li class="nav-item" s>
-      <a href="${pageContext.request.contextPath}/dashboard" class="nav-link active">
+      <a href="${pageContext.request.contextPath}/dashboard" class="nav-link ">
         <i class="bi bi-speedometer2"></i> Dashboard
       </a>
     </li>
@@ -54,7 +54,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a href="${pageContext.request.contextPath}/services" class="nav-link">
+      <a href="${pageContext.request.contextPath}/services" class="nav-link active">
         <i class="bi bi-gear"></i> Dịch vụ
       </a>
     </li>
