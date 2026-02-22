@@ -5,8 +5,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import util.ConnectDB;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 @WebServlet (name = "HomeController", value = "/home")
 public class HomeController extends HttpServlet {

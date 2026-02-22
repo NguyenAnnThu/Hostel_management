@@ -1,21 +1,13 @@
 package com.example.case_study.repository;
 
 import com.example.case_study.entity.ServicePriceConfig;
+
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface IServicePriceConfigRepository {
+    Double findCurrentPrice(String serviceCode);
 
-    List<ServicePriceConfig> getAll();
-
-    boolean add(ServicePriceConfig config);
-
-    boolean update(ServicePriceConfig config);
-
-    boolean delete(int configId);
-
-    ServicePriceConfig findById(int configId);
-
-    List<ServicePriceConfig> findByServiceCode(String serviceCode);
-
-    ServicePriceConfig getEffectivePrice(String serviceCode);
+    void insertPrice(String serviceCode, double price, LocalDate date);
 }

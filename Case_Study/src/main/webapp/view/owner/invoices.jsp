@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -7,6 +8,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hóa đơn - Quản Lý Nhà Trọ</title>
   <c:import url="../layout/library.jsp"></c:import>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/view/owner/assets/styles.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    .add{
+      display:flex;
+      justify-content: space-around;
+    }
+
+  </style>
 </head>
 <body>
   <!-- Sidebar -->
@@ -67,10 +80,11 @@
       </div>
 
       <!-- Note -->
-      <div style="background-color: #e8f4ff; border-left: 4px solid #5dade2; padding: 15px; border-radius: 6px; margin-bottom: 25px;">
-        <p style="margin: 0; font-size: 13px; color: #2e86ab;">
-          <strong>💡 Lưu ý:</strong> Doanh thu chỉ tính hóa đơn đã thu. Khi bạn đánh dấu "Đã thu", hóa đơn sẽ được ghi nhận vào doanh thu.
-        </p>
+      <div class="page-header d-flex justify-content-between align-items-center mb-3">
+        <p>*Lưu ý khi tạo hóa đơn</p>
+        <button class="btn btn-primary" onclick="openCreateModal()">
+          <i class="bi bi-plus-lg"></i> Tạo hóa đơn
+        </button>
       </div>
 
       <!-- Table -->
@@ -90,78 +104,45 @@
               </tr>
             </thead>
             <tbody>
+            <c:forEach var="inv" items="${invoices}">
               <tr>
-                <td><strong>HĐ001</strong></td>
-                <td>P101</td>
-                <td>Nguyễn Văn A</td>
-                <td>01/2025</td>
-                <td>3,500,000</td>
-                <td><span class="badge-custom badge-success">Đã thu</span></td>
-                <td>20/01/2025</td>
+                <td><strong>HĐ${inv.invoiceId}</strong></td>
+                <td>${inv.roomId}</td>
+                <td>${inv.customerId}</td>
                 <td>
-                  <div class="action-buttons">
-                    <a href="invoice-detail.jsp" class="btn-custom btn-primary-custom">Xem</a>
-                    <button class="btn-custom btn-outline" onclick="viewPaymentInfo()">Th.tin</button>
-                  </div>
+                  <fmt:formatNumber value="${inv.month}" minIntegerDigits="2"/>/${inv.year}
                 </td>
-              </tr>
-              <tr>
-                <td><strong>HĐ002</strong></td>
-                <td>P205</td>
-                <td>Phạm Minh C</td>
-                <td>01/2025</td>
-                <td>4,100,000</td>
-                <td><span class="badge-custom badge-info">Chưa thu</span></td>
-                <td>20/01/2025</td>
                 <td>
-                  <div class="action-buttons">
-                    <a href="invoice-detail.jsp" class="btn-custom btn-primary-custom">Xem</a>
-                    <button class="btn-custom btn-success" onclick="markAsPaid('HĐ002')">Đã thu</button>
-                  </div>
+                  <!-- tạm để 0, sau này join detail -->
+                  0
                 </td>
-              </tr>
-              <tr>
-                <td><strong>HĐ003</strong></td>
-                <td>P102</td>
-                <td>Lê Thị D</td>
-                <td>01/2025</td>
-                <td>2,800,000</td>
-                <td><span class="badge-custom badge-success">Đã thu</span></td>
-                <td>20/01/2025</td>
+
                 <td>
-                  <div class="action-buttons">
-                    <a href="invoice-detail.jsp" class="btn-custom btn-primary-custom">Xem</a>
-                    <button class="btn-custom btn-outline" onclick="viewPaymentInfo()">Th.tin</button>
-                  </div>
+                  <c:choose>
+                    <c:when test="${inv.status == 'PAID'}">
+                      <span class="badge-custom badge-success">Đã thu</span>
+                    </c:when>
+                    <c:otherwise>
+                      <span class="badge-custom badge-info">Chưa thu</span>
+                    </c:otherwise>
+                  </c:choose>
                 </td>
-              </tr>
-              <tr>
-                <td><strong>HĐ004</strong></td>
-                <td>P301</td>
-                <td>Trần Thị B</td>
-                <td>01/2025</td>
-                <td>3,800,000</td>
-                <td><span class="badge-custom badge-info">Chưa thu</span></td>
-                <td>20/01/2025</td>
+
                 <td>
-                  <div class="action-buttons">
-                    <a href="invoice-detail.jsp" class="btn-custom btn-primary-custom">Xem</a>
-                    <button class="btn-custom btn-success" onclick="markAsPaid('HĐ004')">Đã thu</button>
-                  </div>
+                  <fmt:formatDate value="${inv.createdAt}" pattern="dd/MM/yyyy"/>
                 </td>
-              </tr>
-              <tr>
-                <td><strong>HĐ005</strong></td>
-                <td>P201</td>
-                <td>Hoàng Văn E</td>
-                <td>12/2024</td>
-                <td>4,200,000</td>
-                <td><span class="badge-custom badge-success">Đã thu</span></td>
-                <td>15/12/2024</td>
+
                 <td>
                   <div class="action-buttons">
-                    <a href="invoice-detail.jsp" class="btn-custom btn-primary-custom">Xem</a>
-                    <button class="btn-custom btn-outline" onclick="viewPaymentInfo()">Th.tin</button>
+                    <a href="${pageContext.request.contextPath}/invoice-detail?id=${inv.invoiceId}"
+                       class="btn-custom btn-primary-custom">Xem</a>
+
+                    <c:if test="${inv.status != 'PAID'}">
+                      <button class="btn-custom btn-success"
+                              onclick="markAsPaid('HĐ${inv.invoiceId}')">
+                        Đã thu
+                      </button>
+                    </c:if>
                   </div>
                 </td>
               </tr>
@@ -238,7 +219,84 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <div class="modal-overlay" id="createInvoiceModal">
+    <div class="modal-content" style="max-width: 700px;">
+      <form method="post" action="${pageContext.request.contextPath}/invoices">
+        <div class="modal-header">
+          <h5>Tạo hóa đơn</h5>
+          <button type="button" class="modal-close-btn"
+                  onclick="closeCreateModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label">Phòng</label>
+              <input name="roomId" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Người thuê</label>
+              <input name="customerId" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Tháng</label>
+              <input type="number" name="month" min="1" max="12"
+                     class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Năm</label>
+              <input type="number" name="year" value="2025"
+                     class="form-control" required>
+            </div>
+          </div>
+
+          <hr>
+
+          <h6>Dịch vụ</h6>
+
+          <!-- 1 dòng dịch vụ -->
+          <div class="row">
+            <div class="col-md-4">
+              <input name="serviceCode" class="form-control"
+                     placeholder="Mã DV" required>
+            </div>
+            <div class="col-md-4">
+              <input name="quantity" type="number"
+                     class="form-control" placeholder="Số lượng" required>
+            </div>
+            <div class="col-md-4">
+              <input name="unitPrice" type="number"
+                     class="form-control" placeholder="Đơn giá" required>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"
+                  class="btn-custom btn-secondary"
+                  onclick="closeCreateModal()">Hủy</button>
+          <button type="submit"
+                  class="btn-custom btn-primary-custom">Tạo hóa đơn</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <script>
+    function openCreateModal() {
+      document.getElementById('modalTitle').innerText = 'Tạo hóa đơn';
+      form.reset();
+      document.getElementById('invoicesCode').value = '';
+      modal.show();
+    }
+
     // Set today's date
     document.getElementById('confirmDate').valueAsDate = new Date();
 
@@ -271,6 +329,23 @@
       document.getElementById('invoiceSearch').value = '';
     }
 
+    function toggleProfileMenu() {
+      const menu = document.getElementById('profileMenu');
+      menu.classList.toggle('show');
+    }
+
+    function logout() {
+      window.location.href = 'login.jsp';
+    }
+
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('profileMenu');
+      const btn = document.querySelector('.profile-btn');
+      if (menu && btn && !menu.contains(event.target) && !btn.contains(event.target)) {
+        menu.classList.remove('show');
+      }
+    });
+
     document.getElementById('paymentModal').addEventListener('click', function(e) {
       if (e.target === this) {
         closePaymentModal();
@@ -282,6 +357,13 @@
         closeInfoModal();
       }
     });
+    function openCreateModal() {
+      document.getElementById('createInvoiceModal').classList.add('show');
+    }
+
+    function closeCreateModal() {
+      document.getElementById('createInvoiceModal').classList.remove('show');
+    }
   </script>
 </body>
 </html>

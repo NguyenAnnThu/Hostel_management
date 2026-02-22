@@ -1,17 +1,17 @@
 package com.example.case_study.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class ServicePriceConfig {
     private int configId;
     private String serviceCode;
     private double price;
-    private Date effectiveDate;
+    private LocalDate effectiveDate;
 
-    public ServicePriceConfig() {
-    }
+    public ServicePriceConfig() {}
 
-    public ServicePriceConfig(int configId, String serviceCode, double price, Date effectiveDate) {
+    public ServicePriceConfig(int configId, String serviceCode, double price, LocalDate effectiveDate) {
         this.configId = configId;
         this.serviceCode = serviceCode;
         this.price = price;
@@ -42,11 +42,11 @@ public class ServicePriceConfig {
         this.price = price;
     }
 
-    public Date getEffectiveDate() {
+    public LocalDate getEffectiveDate() {
         return effectiveDate;
     }
 
-    public void setEffectiveDate(Date effectiveDate) {
+    public void setEffectiveDate(LocalDate effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
 }

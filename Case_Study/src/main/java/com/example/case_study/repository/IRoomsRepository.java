@@ -2,6 +2,7 @@ package com.example.case_study.repository;
 
 import com.example.case_study.dto.RoomDTO;
 import com.example.case_study.entity.Rooms;
+
 import java.util.List;
 
 public interface IRoomsRepository {
