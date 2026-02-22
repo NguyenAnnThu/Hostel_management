@@ -1,301 +1,239 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dịch vụ - Quản Lý Nhà Trọ</title>
+  <title>Cấu hình Dịch vụ</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="assets/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/view/owner/assets/styles.css">
 </head>
+
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <i class="bi bi-buildings"></i> Quản Lý Nhà Trọ
-    </div>
-    <ul class="nav-menu">
-      <li class="nav-item">
-        <a href="dashboard.jsp" class="nav-link">
-          <i class="bi bi-speedometer2"></i> Dashboard
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="rooms.jsp" class="nav-link">
-          <i class="bi bi-door-closed"></i> Phòng
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="bookings.jsp" class="nav-link">
-          <i class="bi bi-calendar-check"></i> Đặt phòng
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="contracts.jsp" class="nav-link">
-          <i class="bi bi-file-earmark-text"></i> Hợp đồng
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="utilities.jsp" class="nav-link">
-          <i class="bi bi-lightning-fill"></i> Điện nước
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="invoices.jsp" class="nav-link">
-          <i class="bi bi-receipt"></i> Hóa đơn
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="services.jsp" class="nav-link active">
-          <i class="bi bi-gear"></i> Dịch vụ
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="users.jsp" class="nav-link">
-          <i class="bi bi-people"></i> Người dùng
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="reports.jsp" class="nav-link">
-          <i class="bi bi-bar-chart"></i> Báo cáo
-        </a>
-      </li>
-    </ul>
+
+<!-- ================= SIDEBAR ================= -->
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <i class="bi bi-buildings"></i> Quản Lý Nhà Trọ
   </div>
+  <ul class="nav-menu">
+    <li class="nav-item" s>
+      <a href="${pageContext.request.contextPath}/dashboard" class="nav-link ">
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/rooms" class="nav-link ">
+        <i class="bi bi-door-closed"></i> Phòng
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/bookings" class="nav-link">
+        <i class="bi bi-calendar-check"></i> Đặt phòng
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/contracts" class="nav-link">
+        <i class="bi bi-file-earmark-text"></i> Hợp đồng
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/utilities" class="nav-link">
+        <i class="bi bi-lightning-fill"></i> Điện nước
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/invoices" class="nav-link">
+        <i class="bi bi-receipt"></i> Hóa đơn
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/services" class="nav-link active">
+        <i class="bi bi-gear"></i> Dịch vụ
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/users" class="nav-link">
+        <i class="bi bi-people"></i> Người dùng
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/reports" class="nav-link">
+        <i class="bi bi-bar-chart"></i> Báo cáo
+      </a>
+    </li>
+  </ul>
+</div>
 
-  <!-- Main Wrapper -->
-  <div class="main-wrapper">
-    <!-- Top Navbar -->
-    <div class="topbar">
-      <div class="topbar-left">
-        <div class="topbar-greeting">Chào mừng, Chủ trọ</div>
-        <div class="topbar-search">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="Tìm kiếm...">
-        </div>
-      </div>
-      <div class="topbar-right">
-        <div class="profile-dropdown">
-          <button class="profile-btn" onclick="toggleProfileMenu()">
-            <div class="profile-avatar">CT</div>
-            <span>Chủ trọ</span>
-            <i class="bi bi-chevron-down"></i>
-          </button>
-          <div class="dropdown-menu-custom" id="profileMenu">
-            <div class="dropdown-item-custom">Hồ sơ cá nhân</div>
-            <div class="dropdown-item-custom">Cài đặt</div>
-            <div class="dropdown-item-custom" onclick="logout()">Đăng xuất</div>
-          </div>
-        </div>
-      </div>
+
+<!-- ================= MAIN ================= -->
+<div class="main-wrapper">
+  <div class="main-content">
+
+    <div class="page-header d-flex justify-content-between align-items-center mb-3">
+      <h1>Cấu hình Dịch vụ</h1>
+      <button class="btn btn-primary" onclick="openCreateModal()">
+        <i class="bi bi-plus-lg"></i> Thêm dịch vụ
+      </button>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <div class="breadcrumb-nav">
-        <a href="dashboard.jsp">Trang chủ</a> / <span>Cấu hình dịch vụ</span>
-      </div>
+    <!-- ================= TABLE ================= -->
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+      <tr>
+        <th>Mã</th>
+        <th>Tên dịch vụ</th>
+        <th>Loại</th>
+        <th>Đơn vị</th>
+        <th>Đơn giá</th>
+        <th>Trạng thái</th>
+        <th></th>
+      </tr>
+      </thead>
 
-      <div class="page-header">
-        <h1 class="page-title">Cấu hình Dịch vụ</h1>
-        <button class="btn-custom btn-primary-custom" onclick="openServiceModal()">
-          <i class="bi bi-plus-lg"></i> Thêm dịch vụ
-        </button>
-      </div>
+      <tbody>
+      <c:forEach var="s" items="${services}">
+        <tr>
+          <td><strong>${s.serviceCode}</strong></td>
+          <td>${s.serviceName}</td>
 
-      <!-- Table -->
-      <div class="card-custom">
-        <div class="table-responsive">
-          <table class="table-custom">
-            <thead>
-              <tr>
-                <th>Mã DV</th>
-                <th>Tên dịch vụ</th>
-                <th>Loại</th>
-                <th>Đơn vị tính</th>
-                <th>Đơn giá (VND)</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>DV001</strong></td>
-                <td>Tiền thuê phòng</td>
-                <td><span class="badge-custom badge-info">Cố định</span></td>
-                <td>Lần/tháng</td>
-                <td>-</td>
-                <td><span class="badge-custom badge-success">Hoạt động</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
-                    <button class="btn-custom btn-danger">Xóa</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>DV002</strong></td>
-                <td>Điện</td>
-                <td><span class="badge-custom badge-light">Chỉ số</span></td>
-                <td>kWh</td>
-                <td>5,000</td>
-                <td><span class="badge-custom badge-success">Hoạt động</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
-                    <button class="btn-custom btn-danger">Xóa</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>DV003</strong></td>
-                <td>Nước</td>
-                <td><span class="badge-custom badge-light">Chỉ số</span></td>
-                <td>m³</td>
-                <td>25,000</td>
-                <td><span class="badge-custom badge-success">Hoạt động</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
-                    <button class="btn-custom btn-danger">Xóa</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>DV004</strong></td>
-                <td>Wifi</td>
-                <td><span class="badge-custom badge-info">Cố định</span></td>
-                <td>Lần/tháng</td>
-                <td>200,000</td>
-                <td><span class="badge-custom badge-success">Hoạt động</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
-                    <button class="btn-custom btn-danger">Xóa</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>DV005</strong></td>
-                <td>Dịch vụ vệ sinh</td>
-                <td><span class="badge-custom badge-info">Cố định</span></td>
-                <td>Lần/tháng</td>
-                <td>150,000</td>
-                <td><span class="badge-custom badge-success">Hoạt động</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
-                    <button class="btn-custom btn-danger">Xóa</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>DV006</strong></td>
-                <td>Gửi xe máy</td>
-                <td><span class="badge-custom badge-info">Cố định</span></td>
-                <td>Lần/tháng</td>
-                <td>50,000</td>
-                <td><span class="badge-custom badge-success">Hoạt động</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom" onclick="editService()">Sửa</button>
-                    <button class="btn-custom btn-danger">Xóa</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+          <td>
+            <span class="badge
+              ${s.serviceType eq 'fixed' ? 'bg-info' :
+                s.serviceType eq 'electricity' ? 'bg-warning' :
+                'bg-primary'}">
+                ${s.serviceType}
+            </span>
+          </td>
+
+          <td>${s.unit}</td>
+
+          <td>
+            <fmt:formatNumber value="${s.defaultPrice}" type="number"/> đ
+          </td>
+
+          <td>
+            <span class="badge ${s.status eq 'active' ? 'bg-success' : 'bg-danger'}">
+                ${s.status}
+            </span>
+          </td>
+
+          <td>
+            <button class="btn btn-sm btn-warning"
+                    onclick="openEditModal(
+                            '${s.serviceCode}',
+                            '${s.serviceName}',
+                            '${s.serviceType}',
+                            '${s.unit}',
+                            '${s.defaultPrice}',
+                            '${s.status}'
+                            )">
+              Sửa
+            </button>
+          </td>
+        </tr>
+      </c:forEach>
+
+      <c:if test="${empty services}">
+        <tr>
+          <td colspan="7" class="text-center text-muted">
+            Chưa có dịch vụ nào
+          </td>
+        </tr>
+      </c:if>
+      </tbody>
+    </table>
+
   </div>
+</div>
 
-  <!-- Service Modal -->
-  <div class="modal-overlay" id="serviceModal">
-    <div class="modal-content" style="max-width: 550px;">
+<!-- ================= MODAL ================= -->
+<div class="modal fade" id="serviceModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="serviceForm"
+          class="modal-content"
+          method="post"
+          action="${pageContext.request.contextPath}/services">
+
       <div class="modal-header">
-        <h5 id="serviceModalTitle">Thêm Dịch vụ mới</h5>
-        <button class="modal-close-btn" onclick="closeServiceModal()">×</button>
+        <h5 class="modal-title" id="modalTitle">Dịch vụ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
+
       <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">Mã dịch vụ</label>
-          <input type="text" class="form-control" placeholder="DV001">
+        <input type="hidden" name="serviceCode" id="serviceCode">
+
+        <div class="mb-2">
+          <label>Tên dịch vụ</label>
+          <input type="text" name="serviceName" id="serviceName" class="form-control" required>
         </div>
-        <div class="form-group">
-          <label class="form-label">Tên dịch vụ</label>
-          <input type="text" class="form-control" placeholder="Ví dụ: Wifi, Điện, Nước...">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Loại dịch vụ</label>
-          <select class="form-control">
-            <option value="">-- Chọn loại --</option>
-            <option value="chi_so">Chỉ số (tính theo số lượng)</option>
-            <option value="co_dinh">Cố định (không tính chỉ số)</option>
+
+        <div class="mb-2">
+          <label>Loại</label>
+          <select name="serviceType" id="serviceType" class="form-select">
+            <option value="fixed">Cố định</option>
+            <option value="electricity">Điện</option>
+            <option value="water">Nước</option>
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">Đơn vị tính</label>
-          <input type="text" class="form-control" placeholder="kWh, m³, Lần/tháng...">
+
+        <div class="mb-2">
+          <label>Đơn vị</label>
+          <input type="text" name="unit" id="unit" class="form-control">
         </div>
-        <div class="form-group">
-          <label class="form-label">Đơn giá (VND)</label>
-          <input type="number" class="form-control" placeholder="5000">
+
+        <div class="mb-2">
+          <label>Đơn giá</label>
+          <input type="number" name="defaultPrice" id="defaultPrice" class="form-control">
         </div>
-        <div class="form-group">
-          <label class="form-label">Trạng thái</label>
-          <select class="form-control">
-            <option selected>Hoạt động</option>
-            <option>Không hoạt động</option>
+
+        <div class="mb-2">
+          <label>Trạng thái</label>
+          <select name="status" id="status" class="form-select">
+            <option value="active">Hoạt động</option>
+            <option value="inactive">Ngưng</option>
           </select>
         </div>
       </div>
+
       <div class="modal-footer">
-        <button class="btn-custom btn-secondary" onclick="closeServiceModal()">Hủy</button>
-        <button class="btn-custom btn-primary-custom">Lưu</button>
+        <button class="btn btn-primary">Lưu</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
       </div>
-    </div>
+    </form>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    function openServiceModal() {
-      document.getElementById('serviceModalTitle').textContent = 'Thêm Dịch vụ mới';
-      document.getElementById('serviceModal').classList.add('show');
-    }
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    function editService() {
-      document.getElementById('serviceModalTitle').textContent = 'Chỉnh sửa Dịch vụ';
-      document.getElementById('serviceModal').classList.add('show');
-    }
+<script>
+  const modal = new bootstrap.Modal(document.getElementById('serviceModal'));
+  const form = document.getElementById('serviceForm');
 
-    function closeServiceModal() {
-      document.getElementById('serviceModal').classList.remove('show');
-    }
+  function openCreateModal() {
+    document.getElementById('modalTitle').innerText = 'Thêm dịch vụ';
+    form.reset();
+    document.getElementById('serviceCode').value = '';
+    modal.show();
+  }
 
-    function toggleProfileMenu() {
-      const menu = document.getElementById('profileMenu');
-      menu.classList.toggle('show');
-    }
+  function openEditModal(code, name, type, unitVal, price, statusVal) {
+    document.getElementById('modalTitle').innerText = 'Chỉnh sửa dịch vụ';
+    document.getElementById('serviceCode').value = code;
+    document.getElementById('serviceName').value = name;
+    document.getElementById('serviceType').value = type;
+    document.getElementById('unit').value = unitVal;
+    document.getElementById('defaultPrice').value = price;
+    document.getElementById('status').value = statusVal;
+    modal.show();
+  }
+</script>
 
-    function logout() {
-      window.location.href = 'login.jsp';
-    }
-
-    document.addEventListener('click', function(event) {
-      const menu = document.getElementById('profileMenu');
-      const btn = document.querySelector('.profile-btn');
-      if (menu && btn && !menu.contains(event.target) && !btn.contains(event.target)) {
-        menu.classList.remove('show');
-      }
-    });
-
-    document.getElementById('serviceModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeServiceModal();
-      }
-    });
-  </script>
 </body>
 </html>

@@ -1,88 +1,61 @@
 package com.example.case_study.repository;
 
-import com.example.case_study.entity.ServicePriceConfig;
+import com.example.case_study.common.DBConnection;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.time.LocalDate;
+
 
 public class ServicePriceConfigRepository implements IServicePriceConfigRepository {
 
-    private List<ServicePriceConfig> configList = new ArrayList<>();
-    private int autoId = 1;
-
     @Override
-    public List<ServicePriceConfig> getAll() {
-        return configList;
-    }
+    public Double findCurrentPrice(String code) {
 
-    @Override
-    public boolean add(ServicePriceConfig config) {
-        if (config == null) return false;
+        String sql = """
+            SELECT price
+            FROM service_price_config
+            WHERE service_code = ?
+            ORDER BY effective_date DESC
+            LIMIT 1
+        """;
 
-        config.setConfigId(autoId++);
-        if (config.getEffectiveDate() == null) {
-            config.setEffectiveDate(new Date());
-        }
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
 
-        configList.add(config);
-        return true;
-    }
-
-    @Override
-    public boolean update(ServicePriceConfig config) {
-        for (ServicePriceConfig c : configList) {
-            if (c.getConfigId() == config.getConfigId()) {
-                c.setServiceCode(config.getServiceCode());
-                c.setPrice(config.getPrice());
-                c.setEffectiveDate(config.getEffectiveDate());
-                return true;
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("price");
             }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean delete(int configId) {
-        return configList.removeIf(c -> c.getConfigId() == configId);
-    }
-
-    @Override
-    public ServicePriceConfig findById(int configId) {
-        for (ServicePriceConfig c : configList) {
-            if (c.getConfigId() == configId) {
-                return c;
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public List<ServicePriceConfig> findByServiceCode(String serviceCode) {
-        List<ServicePriceConfig> result = new ArrayList<>();
-        for (ServicePriceConfig c : configList) {
-            if (c.getServiceCode().equalsIgnoreCase(serviceCode)) {
-                result.add(c);
-            }
+    public void insertPrice(String code, double price, LocalDate date) {
+
+        String sql = """
+            INSERT INTO service_price_config
+            (service_code, price, effective_date)
+            VALUES (?, ?, ?)
+        """;
+
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setString(1, code);
+            ps.setDouble(2, price);
+            ps.setDate(3, Date.valueOf(date));
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return result;
     }
 
-    // Lấy giá có hiệu lực mới nhất
-    @Override
-    public ServicePriceConfig getEffectivePrice(String serviceCode) {
-        ServicePriceConfig latest = null;
-        Date now = new Date();
-
-        for (ServicePriceConfig c : configList) {
-            if (c.getServiceCode().equalsIgnoreCase(serviceCode)
-                    && c.getEffectiveDate().before(now)) {
-
-                if (latest == null || c.getEffectiveDate().after(latest.getEffectiveDate())) {
-                    latest = c;
-                }
-            }
-        }
-        return latest;
-    }
 }
