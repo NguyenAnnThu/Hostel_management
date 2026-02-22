@@ -20,4 +20,8 @@ public interface IRoomsService {
     List<Rooms> findByStatus(String status);
 
     List<Rooms> findByFloor(int floor);
+
+    List<Rooms> getRoomList();
+
+    List<Rooms> searchRooms(String roomName, Integer floor);
 }

@@ -1,12 +1,7 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: hieuvannguyen
-  Date: 6/2/26
-  Time: 12:10
-  To change this template use File | Settings | File Templates.
---%>
+<%-- Created by IntelliJ IDEA. User: hieuvannguyen Date: 6/2/26 Time: 12:10 To change this template use File | Settings
+    | File Templates. --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html lang="en">
 
 <head>
@@ -17,8 +12,7 @@
 
     <meta name="description" content=""/>
     <meta name="keywords" content="bootstrap, bootstrap4"/>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/view/user/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/view/user/css/tiny-slider.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/view/user/css/style.css">
@@ -31,22 +25,31 @@
 <body>
 
 <!-- Start Header/Navigation -->
-<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark"
+     arial-label="Furni navigation bar">
 
     <div class="container">
         <a class="navbar-brand" href="index.html">Nhà của Bột<span>.</span></a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
-                aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false"
+                aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarsFurni">
             <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/home.jsp">Trang chủ</a></li>
-                <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/view/user/room.jsp">Phòng trọ</a></li>
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/detailsRoom.jsp">Chi tiết phòng</a></li>
-                <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/contact.jsp">Liên hệ</a></li>
+                <li><a class="nav-link"
+                       href="${pageContext.request.contextPath}/view/user/home.jsp">Trang chủ</a></li>
+                <%-- <li class="nav-item active"><a class="nav-link" --%>
+                <%-- href="${pageContext.request.contextPath}/view/user/room.jsp">Phòng trọ</a>
+            </li>--%>
+                <li class="nav-item active"><a class="nav-link"
+                                               href="${pageContext.request.contextPath}/room?action=listRooms">Phòng
+                    trọ</a></li>
+                <li><a class="nav-link"
+                       href="${pageContext.request.contextPath}/view/user/contact.jsp">Liên hệ</a>
+                </li>
             </ul>
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
@@ -63,199 +66,146 @@
 
 <div class="untree_co-section product-section before-footer-section">
     <div class="container">
+        <!-- Search Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">🔍 Tìm kiếm phòng trọ</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" action="${pageContext.request.contextPath}/room"
+                              class="row g-3">
+                            <input type="hidden" name="action" value="search">
+
+                            <div class="col-md-5">
+                                <label for="roomName" class="form-label">Tên phòng (gần đúng)</label>
+                                <input type="text" class="form-control" id="roomName" name="roomName"
+                                       placeholder="Nhập tên phòng (vd: P101, A02...)"
+                                       value="${searchRoomName}">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="floor" class="form-label">Tầng</label>
+                                <input type="number" class="form-control" id="floor" name="floor"
+                                       placeholder="Nhập tầng" min="0" value="${searchFloor}">
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-search"></i> Tìm kiếm
+                                </button>
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-end">
+                                <a href="${pageContext.request.contextPath}/room"
+                                   class="btn btn-secondary w-100">
+                                    <i class="fa fa-refresh"></i> Xóa tìm
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Count -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <p class="text-muted">
+                    <strong>Tổng phòng trọ:</strong> <span
+                        class="badge bg-info">${roomList.size()}</span> phòng
+                </p>
+            </div>
+        </div>
+
+        <!-- Rooms Display -->
         <div class="row">
+            <c:if test="${empty roomList}">
+                <div class="col-12">
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <i class="fa fa-info-circle"></i> <strong>Không tìm thấy phòng trọ</strong> phù
+                        hợp với tiêu chí tìm kiếm của bạn.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
+            </c:if>
 
-            <!-- 101 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong101.jpg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 101</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
+            <c:forEach var="rooms" items="${roomList}">
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm hover-shadow" style="transition: all 0.3s ease;">
+                        <div class="card-body">
+                            <!-- Room ID/Name -->
+                            <h5 class="card-title text-primary">
+                                <i class="fa fa-door-open"></i> ${rooms.roomId}
+                            </h5>
 
-            <!-- 102 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong102.jpg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 102</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
+                            <!-- Room Details - Simple List -->
+                            <ul class="list-unstyled">
+                                <li class="mb-3">
+                                    <i class="fa fa-layer-group text-info"></i>
+                                    <strong>Tầng:</strong> <span
+                                        class="badge bg-info">${rooms.floor}</span>
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fa fa-home"></i>
+                                    <strong>Trạng thái:</strong>
+                                    <c:choose>
+                                        <c:when test="${rooms.status == 'available'}">
+                                            <span class="badge bg-success">Còn trống</span>
+                                        </c:when>
+                                        <c:when test="${rooms.status == 'rented'}">
+                                            <span class="badge bg-warning">Đã cho thuê</span>
+                                        </c:when>
+                                        <c:when test="${rooms.status == 'maintenance'}">
+                                            <span class="badge bg-danger">Bảo trì</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="badge bg-secondary">${rooms.status}</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </li>
+                            </ul>
+                        </div>
 
-            <!-- 103 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong103.jpg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 103</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 104 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong104.jpg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 104</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 105 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong105.jpeg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 105</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 201 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong201.jpg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 201</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 202 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong202.jpeg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 202</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 203 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong203.jpeg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 203</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 204 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong204.jpeg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 204</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 205 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong205.jpeg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 205</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 301 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong301.jpeg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 301</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 302 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong302.jpeg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 302</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 303 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong303.jpeg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 303</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 304 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong304.jpeg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 304</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
-
-            <!-- 305 -->
-            <div class="col-12 col-md-4 col-lg-3 mb-5">
-                <a class="product-item" href="#">
-                    <img src="img_house/phong305.jpg" class="img-fluid product-thumbnail">
-                    <h3 class="product-title">Phòng 305</h3>
-                    <strong class="product-price">3.000.000 VND</strong>
-                    <span class="icon-cross">
-						<img src="images/cross.svg" class="img-fluid">
-						</span>
-                </a>
-            </div>
+                        <!-- Card Footer -->
+                        <div class="card-footer bg-light">
+                            <a href="${pageContext.request.contextPath}/room?action=viewDetailsRooms&roomId=${rooms.roomId}"
+                               class="btn btn-sm btn-primary w-100">
+                                <i class="fa fa-eye"></i> Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </c:forEach>
         </div>
     </div>
 </div>
 
+<!-- Add CSS for hover effect -->
+<style>
+    .hover-shadow:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-5px);
+    }
 
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+
+    .card-header {
+        border-radius: 8px 8px 0 0;
+    }
+</style>
 
 <!-- Start Footer Section -->
 <footer class="footer-section">
     <div class="container relative">
 
         <div class="sofa-img">
-            <img src="${pageContext.request.contextPath}/view/user/img_house/house2.png" alt="Image" class="img-fluid">
+            <img src="${pageContext.request.contextPath}/view/user/img_house/house2.png" alt="Image"
+                 class="img-fluid">
         </div>
 
         <div class="row">
@@ -263,8 +213,9 @@
                 <div class="subscription-form">
                     <h3 class="d-flex align-items-center"><span class="me-1"><img
                             src="${pageContext.request.contextPath}/view/user/images/envelope-outline.svg"
-                            alt="Image" class="img-fluid"></span><span>Đăng ký nhận thông tin phòng mới
-                            </span>
+                            alt="Image" class="img-fluid"></span><span>Đăng ký nhận thông tin phòng
+                                            mới
+                                        </span>
                     </h3>
 
                     <form action="#" class="row g-3">
@@ -287,9 +238,12 @@
 
         <div class="row g-5 mb-5">
             <div class="col-lg-4">
-                <div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">NhaTro247<span>.</span></a></div>
-                <p class="mb-4">Nền tảng hỗ trợ bạn tìm và thuê phòng trọ nhanh chóng, minh bạch và an toàn.
-                    Cập nhật phòng mới mỗi ngày, dễ dàng đặt lịch xem phòng và liên hệ chủ trọ trực tiếp</p>
+                <div class="mb-4 footer-logo-wrap"><a href="#"
+                                                      class="footer-logo">NhaTro247<span>.</span></a></div>
+                <p class="mb-4">Nền tảng hỗ trợ bạn tìm và thuê phòng trọ nhanh chóng, minh bạch và an
+                    toàn.
+                    Cập nhật phòng mới mỗi ngày, dễ dàng đặt lịch xem phòng và liên hệ chủ trọ trực tiếp
+                </p>
 
                 <ul class="list-unstyled custom-social">
                     <li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
@@ -366,4 +320,3 @@
 </body>
 
 </html>
-

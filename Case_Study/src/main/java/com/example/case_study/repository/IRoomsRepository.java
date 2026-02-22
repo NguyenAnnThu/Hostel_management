@@ -9,6 +9,9 @@ public interface IRoomsRepository {
 
     List<RoomDTO> getAllRooms();
 
+    // lấy toàn bộ phòng hiển thị cho user
+    List<Rooms> getRoomsList();
+
     boolean addRoom(Rooms room);
 
     boolean updateRoom(Rooms room);
@@ -20,4 +23,6 @@ public interface IRoomsRepository {
     List<Rooms> findByStatus(String status);
 
     List<Rooms> findByFloor(int floor);
+
+    List<Rooms> searchRooms(String roomName, Integer floor);
 }

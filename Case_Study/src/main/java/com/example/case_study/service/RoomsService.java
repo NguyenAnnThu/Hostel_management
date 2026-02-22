@@ -49,4 +49,14 @@ public class RoomsService implements IRoomsService {
     public List<Rooms> findByFloor(int floor) {
         return roomsRepository.findByFloor(floor);
     }
+
+    @Override
+    public List<Rooms> getRoomList() {
+        return roomsRepository.getRoomsList();
+    }
+
+    @Override
+    public List<Rooms> searchRooms(String roomName, Integer floor) {
+        return roomsRepository.searchRooms(roomName, floor);
+    }
 }
