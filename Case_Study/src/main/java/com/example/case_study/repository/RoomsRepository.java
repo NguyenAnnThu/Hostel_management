@@ -24,7 +24,7 @@ public class RoomsRepository implements IRoomsRepository {
             "where 1 = 1 " +
             "order by r.floor, r.room_id";
 
-    private static  final String GET_ALL_ROOMS_USER = "select * from rooms";
+    private static final String GET_ALL_ROOMS_USER = "select * from rooms";
     private List<Rooms> roomsList = new ArrayList<>();
 
     // Lấy toàn bộ phòng
@@ -59,7 +59,8 @@ public class RoomsRepository implements IRoomsRepository {
         try (
                 Connection connection = ConnectDB.getConnectDB();
                 PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ROOMS_USER);
-                ResultSet resultSet = preparedStatement.executeQuery();) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+        ) {
             while (resultSet.next()) {
                 String roomId = resultSet.getString("room_id");
                 int floor = resultSet.getInt("floor");
@@ -124,11 +125,35 @@ public class RoomsRepository implements IRoomsRepository {
     // Tìm theo mã phòng
     @Override
     public Rooms findById(String roomId) {
-        for (Rooms r : roomsList) {
-            if (r.getRoomId().equalsIgnoreCase(roomId)) {
-                return r;
+        String sql = "select * from rooms where room_id = ?";
+        try (
+                Connection conn = ConnectDB.getConnectDB();
+                PreparedStatement ps = conn.prepareStatement(sql);
+        ) {
+            ps.setString(1, roomId);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()) {
+                return new Rooms(
+                        rs.getString("room_id"),
+                        rs.getInt("floor"),
+                        rs.getDouble("area"),
+                        rs.getDouble("price"),
+                        rs.getInt("max_occupants"),
+                        rs.getString("description"),
+                        rs.getString("status"),
+                        rs.getDate("created_at"),
+                        rs.getDate("updated_at")
+                );
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+//        for (Rooms r : roomsList) {
+//            if (r.getRoomId().equalsIgnoreCase(roomId)) {
+//                return r;
+//            }
+//        }
         return null;
     }
 

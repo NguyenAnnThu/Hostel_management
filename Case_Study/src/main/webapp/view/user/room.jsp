@@ -41,15 +41,15 @@
                             <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
                                 <li><a class="nav-link"
                                         href="${pageContext.request.contextPath}/view/user/home.jsp">Trang chủ</a></li>
-<%--                                <li class="nav-item active"><a class="nav-link"--%>
-<%--                                        href="${pageContext.request.contextPath}/view/user/room.jsp">Phòng trọ</a></li>--%>
-                                <li class="nav-item active"><a class="nav-link"
-                                        href="${pageContext.request.contextPath}/room?action=listRooms">Phòng trọ</a></li>
-                                <li><a class="nav-link"
-                                        href="${pageContext.request.contextPath}/view/user/detailsRoom.jsp">Chi tiết
-                                        phòng</a></li>
-                                <li><a class="nav-link"
-                                        href="${pageContext.request.contextPath}/view/user/contact.jsp">Liên hệ</a></li>
+                                <%-- <li class="nav-item active"><a class="nav-link" --%>
+                                        <%-- href="${pageContext.request.contextPath}/view/user/room.jsp">Phòng trọ</a>
+                                    </li>--%>
+                                    <li class="nav-item active"><a class="nav-link"
+                                            href="${pageContext.request.contextPath}/room?action=listRooms">Phòng
+                                            trọ</a></li>
+                                    <li><a class="nav-link"
+                                            href="${pageContext.request.contextPath}/view/user/contact.jsp">Liên hệ</a>
+                                    </li>
                             </ul>
 
                             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
@@ -140,35 +140,25 @@
                                                 <i class="fa fa-door-open"></i> ${rooms.roomId}
                                             </h5>
 
-                                            <!-- Room Details -->
-                                            <ul class="list-unstyled small">
-                                                <li class="mb-2">
+                                            <!-- Room Details - Simple List -->
+                                            <ul class="list-unstyled">
+                                                <li class="mb-3">
                                                     <i class="fa fa-layer-group text-info"></i>
-                                                    <strong>Tầng:</strong> ${rooms.floor}
+                                                    <strong>Tầng:</strong> <span
+                                                        class="badge bg-info">${rooms.floor}</span>
                                                 </li>
-                                                <li class="mb-2">
-                                                    <i class="fa fa-ruler text-success"></i>
-                                                    <strong>Diện tích:</strong> ${rooms.area} m²
-                                                </li>
-                                                <li class="mb-2">
-                                                    <i class="fa fa-users text-warning"></i>
-                                                    <strong>Sức chứa:</strong> ${rooms.maxOccupants} người
-                                                </li>
-                                                <li class="mb-2">
-                                                    <i class="fa fa-tag text-danger"></i>
-                                                    <strong>Giá:</strong> <span
-                                                        class="badge bg-danger">${String.format("%,.0f", rooms.price)}
-                                                        VND/tháng</span>
-                                                </li>
-                                                <li class="mb-2">
+                                                <li class="mb-3">
                                                     <i class="fa fa-home"></i>
                                                     <strong>Trạng thái:</strong>
                                                     <c:choose>
-                                                        <c:when test="${rooms.status == 'AVAILABLE'}">
+                                                        <c:when test="${rooms.status == 'available'}">
                                                             <span class="badge bg-success">Còn trống</span>
                                                         </c:when>
-                                                        <c:when test="${rooms.status == 'OCCUPIED'}">
+                                                        <c:when test="${rooms.status == 'rented'}">
                                                             <span class="badge bg-warning">Đã cho thuê</span>
+                                                        </c:when>
+                                                        <c:when test="${rooms.status == 'maintenance'}">
+                                                            <span class="badge bg-danger">Bảo trì</span>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span class="badge bg-secondary">${rooms.status}</span>
@@ -176,18 +166,12 @@
                                                     </c:choose>
                                                 </li>
                                             </ul>
-
-                                            <!-- Description -->
-                                            <c:if test="${not empty rooms.description}">
-                                                <p class="card-text small text-muted mt-2">
-                                                    ${rooms.description}
-                                                </p>
-                                            </c:if>
                                         </div>
 
                                         <!-- Card Footer -->
                                         <div class="card-footer bg-light">
-                                            <a href="#" class="btn btn-sm btn-primary w-100">
+                                            <a href="${pageContext.request.contextPath}/room?action=viewDetailsRooms&roomId=${rooms.roomId}"
+                                                class="btn btn-sm btn-primary w-100">
                                                 <i class="fa fa-eye"></i> Xem chi tiết
                                             </a>
                                         </div>
@@ -214,8 +198,6 @@
                         border-radius: 8px 8px 0 0;
                     }
                 </style>
-
-
 
                 <!-- Start Footer Section -->
                 <footer class="footer-section">

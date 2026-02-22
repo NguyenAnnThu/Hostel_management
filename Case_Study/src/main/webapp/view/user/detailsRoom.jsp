@@ -1,3 +1,5 @@
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%--
   Created by IntelliJ IDEA.
   User: hieuvannguyen
@@ -25,7 +27,41 @@
 
     <title>Tìm nhà giá rẻ có Hiếu lo</title>
 </head>
+<style>
+    .room-image-wrapper {
+        overflow: hidden;
+        border-radius: 15px;
+    }
 
+    .room-image {
+        transition: transform 0.5s ease;
+    }
+
+    .room-image:hover {
+        transform: scale(1.08);
+    }
+
+    .room-card {
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .room-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .book-btn {
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .book-btn:hover {
+        background-color: #ffc107;
+        color: #000;
+        transform: scale(1.03);
+    }
+</style>
 <body>
 
 <!-- Start Header/Navigation -->
@@ -42,8 +78,7 @@
         <div class="collapse navbar-collapse" id="navbarsFurni">
             <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
                 <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/home.jsp">Trang chủ</a></li>
-                <li class=""><a class="nav-link" href="${pageContext.request.contextPath}/room?action=listRooms">Phòng trọ</a></li>
-                <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/view/user/detailsRoom.jsp">Chi tiết phòng</a></li>
+                <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/room?action=listRooms">Phòng trọ</a></li>
                 <li><a class="nav-link" href="${pageContext.request.contextPath}/view/user/contact.jsp">Liên hệ</a></li>
             </ul>
 
@@ -58,6 +93,100 @@
 
 </nav>
 <!-- End Header/Navigation -->
+<div class="container my-5">
+
+    <div class="row g-4">
+
+        <!-- ẢNH PHÒNG -->
+        <div class="col-lg-7">
+            <div class="room-image-wrapper">
+                <img src="${pageContext.request.contextPath}/view/user/img_house/house2.png"
+                     class="img-fluid rounded room-image"
+                     alt="Room Image">
+            </div>
+        </div>
+
+        <!-- THÔNG TIN PHÒNG -->
+        <div class="col-lg-5">
+            <div class="card shadow-lg border-0 room-card">
+
+                <div class="card-body">
+
+                    <h3 class="fw-bold mb-3">
+                        Phòng ${rooms.roomId}
+                    </h3>
+
+                    <p class="text-muted mb-2">
+                        <i class="fa-solid fa-layer-group me-2"></i>
+                        Tầng: ${rooms.floor}
+                    </p>
+
+                    <p class="text-muted mb-2">
+                        <i class="fa-solid fa-expand me-2"></i>
+                        Diện tích: ${rooms.area} m²
+                    </p>
+
+                    <p class="text-muted mb-2">
+                        <i class="fa-solid fa-users me-2"></i>
+                        Tối đa: ${rooms.maxOccupants} người
+                    </p>
+
+                    <!-- GIÁ -->
+                    <h2 class="text-danger fw-bold my-3">
+                        <i class="fa-solid fa-users me-2"></i>
+                        <fmt:formatNumber value="${rooms.price}" type="number" groupingUsed="true"/>
+                        VND
+                    </h2>
+
+                    <!-- TRẠNG THÁI -->
+                    <c:choose>
+
+                        <c:when test="${rooms.status == 'available'}">
+                            <span class="badge bg-success px-3 py-2">Còn trống</span>
+                        </c:when>
+
+                        <c:when test="${rooms.status == 'rented'}">
+                            <span class="badge bg-warning text-dark px-3 py-2">Đã cho thuê</span>
+                        </c:when>
+
+                        <c:when test="${rooms.status == 'maintenance'}">
+                            <span class="badge bg-danger px-3 py-2">Bảo trì</span>
+                        </c:when>
+
+                        <c:otherwise>
+                            <span class="badge bg-secondary px-3 py-2">
+                                    ${rooms.status}
+                            </span>
+                        </c:otherwise>
+
+                    </c:choose>
+
+                    <!-- NÚT ĐẶT LỊCH -->
+                    <div class="d-grid mt-4">
+                        <a href="#"
+                           class="btn btn-dark btn-lg book-btn">
+                            <i class="fa-solid fa-calendar-check me-2"></i>
+                            Đặt lịch hẹn
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MÔ TẢ -->
+    <div class="card shadow-sm border-0 mt-5">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Mô tả phòng</h5>
+            <p class="text-muted">
+                ${rooms.description}
+            </p>
+        </div>
+    </div>
+
+</div>
 <!-- Start Footer Section -->
 <footer class="footer-section">
     <div class="container relative">
