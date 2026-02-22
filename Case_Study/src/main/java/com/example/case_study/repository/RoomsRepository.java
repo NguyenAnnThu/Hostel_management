@@ -13,17 +13,18 @@ import java.util.Date;
 import java.util.List;
 
 public class RoomsRepository implements IRoomsRepository {
-    private static final String GET_ALL_ROOMS =
-            "select r.room_id, r.floor, r.area, r.price, r.status, r.updated_at, u.full_name AS tenant_name " +
-                    "from rooms r " +
-                    "left join room_tenants rt " +
-                    "on r.room_id = rt.room_id " +
-                    "and rt.status = 'staying' " +
-                    "left join users u " +
-                    "on rt.user_id = u.user_id " +
-                    "where 1 = 1 " +
-                    "order by r.floor, r.room_id";
+    private static final String GET_ALL_ROOMS = "select r.room_id, r.floor, r.area, r.price, r.status, r.updated_at, u.full_name AS tenant_name "
+            +
+            "from rooms r " +
+            "left join room_tenants rt " +
+            "on r.room_id = rt.room_id " +
+            "and rt.status = 'staying' " +
+            "left join users u " +
+            "on rt.user_id = u.user_id " +
+            "where 1 = 1 " +
+            "order by r.floor, r.room_id";
 
+    private static  final String GET_ALL_ROOMS_USER = "select * from rooms";
     private List<Rooms> roomsList = new ArrayList<>();
 
     // Lấy toàn bộ phòng
@@ -34,8 +35,7 @@ public class RoomsRepository implements IRoomsRepository {
         try (
                 Connection connection = ConnectDB.getConnectDB();
                 PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ROOMS);
-                ResultSet resultSet = preparedStatement.executeQuery();
-        ) {
+                ResultSet resultSet = preparedStatement.executeQuery();) {
             while (resultSet.next()) {
                 String roomId = resultSet.getString("room_id");
                 int floor = resultSet.getInt("floor");
@@ -52,10 +52,42 @@ public class RoomsRepository implements IRoomsRepository {
         return roomsList;
     }
 
+    // lấy toàn bộ phòng hiển thị cho user
+    @Override
+    public List<Rooms> getRoomsList() {
+        List<Rooms> roomsList = new ArrayList<>();
+        try (
+                Connection connection = ConnectDB.getConnectDB();
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ROOMS_USER);
+                ResultSet resultSet = preparedStatement.executeQuery();) {
+            while (resultSet.next()) {
+                String roomId = resultSet.getString("room_id");
+                int floor = resultSet.getInt("floor");
+                double area = resultSet.getDouble("area");
+                double price = resultSet.getDouble("price");
+                int maxOccupants = resultSet.getInt("max_occupants");
+                String description = resultSet.getString("description");
+                String status = resultSet.getString("status");
+                Date createdAt = resultSet.getDate("created_at");
+                Date updatedAt = resultSet.getDate("updated_at");
+//                String image = resultSet.getString("image");
+
+//                roomsList.add(new Rooms(roomId, floor, area, price, maxOccupants, description, status, createdAt,
+//                        updatedAt, image));
+                roomsList.add(new Rooms(roomId, floor, area, price, maxOccupants, description, status, createdAt,
+                        updatedAt));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return roomsList;
+    }
+
     // Thêm phòng mới
     @Override
     public boolean addRoom(Rooms room) {
-        if (room == null) return false;
+        if (room == null)
+            return false;
 
         if (findById(room.getRoomId()) != null) {
             return false; // trùng mã phòng
@@ -70,7 +102,8 @@ public class RoomsRepository implements IRoomsRepository {
     @Override
     public boolean updateRoom(Rooms room) {
         Rooms existing = findById(room.getRoomId());
-        if (existing == null) return false;
+        if (existing == null)
+            return false;
 
         existing.setFloor(room.getFloor());
         existing.setArea(room.getArea());
@@ -120,6 +153,34 @@ public class RoomsRepository implements IRoomsRepository {
                 result.add(r);
             }
         }
+        return result;
+    }
+
+    // Tìm kiếm theo tên phòng (gần đúng) và tầng (tùy chọn)
+    public List<Rooms> searchRooms(String roomName, Integer floor) {
+        List<Rooms> list = getRoomsList();
+        List<Rooms> result = new ArrayList<>();
+
+        for (Rooms r : list) {
+            boolean matchName = true;
+            boolean matchFloor = true;
+
+            // Kiểm tra tên phòng (gần đúng, không phân biệt hoa thường)
+            if (roomName != null && !roomName.trim().isEmpty()) {
+                matchName = r.getRoomId().toLowerCase().contains(roomName.toLowerCase());
+            }
+
+            // Kiểm tra tầng
+            if (floor != null && floor > 0) {
+                matchFloor = r.getFloor() == floor;
+            }
+
+            // Nếu cả hai điều kiện đều thỏa mãn, thêm vào kết quả
+            if (matchName && matchFloor) {
+                result.add(r);
+            }
+        }
+
         return result;
     }
 }

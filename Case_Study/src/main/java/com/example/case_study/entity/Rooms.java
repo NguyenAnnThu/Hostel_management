@@ -12,10 +12,23 @@ public class Rooms {
     private String status;
     private Date createdAt;
     private Date updatedAt;
+//    private String image;
 
     public Rooms() {
     }
 
+//    public Rooms(String roomId, int floor, double area, double price, int maxOccupants, String description, String status, Date createdAt, Date updatedAt, String image) {
+//        this.roomId = roomId;
+//        this.floor = floor;
+//        this.area = area;
+//        this.price = price;
+//        this.maxOccupants = maxOccupants;
+//        this.description = description;
+//        this.status = status;
+//        this.createdAt = createdAt;
+//        this.updatedAt = updatedAt;
+//        this.image = image;
+//    }
     public Rooms(String roomId, int floor, double area, double price, int maxOccupants, String description, String status, Date createdAt, Date updatedAt) {
         this.roomId = roomId;
         this.floor = floor;
@@ -26,6 +39,7 @@ public class Rooms {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+
     }
 
     public String getRoomId() {
@@ -99,4 +113,12 @@ public class Rooms {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+//    public String getImage() {
+//        return image;
+//    }
+//
+//    public void setImage(String image) {
+//        this.image = image;
+//    }
 }

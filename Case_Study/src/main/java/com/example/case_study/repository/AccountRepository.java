@@ -1,7 +1,13 @@
 package com.example.case_study.repository;
 
 import com.example.case_study.entity.Account;
+import util.ConnectDB;
 
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +22,14 @@ public class AccountRepository implements IAccountRepository {
     // Lấy toàn bộ tài khoản
     @Override
     public List<Account> getAllAccounts() {
+        Connection connection = ConnectDB.getConnectDB();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from accounts");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return accounts;
     }
 
