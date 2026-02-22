@@ -96,34 +96,45 @@
         <h2><i class="bi bi-buildings"></i> Quản Lý Nhà Trọ</h2>
         <p>Hệ thống quản lý nhà trọ hiện đại</p>
       </div>
+      <%
+        String error = (String) request.getAttribute("error");
+        if (error != null) {
+      %>
+      <div class="alert alert-danger text-center">
+        <%= error %>
+      </div>
+      <%
+        }
+      %>
 
-      <form id="loginForm">
+      <form action="${pageContext.request.contextPath}/login" method="post">
         <div class="form-group">
           <label class="form-label">Số điện thoại</label>
-          <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại" required>
+          <input type="tel" class="form-control" name="phone" required>
         </div>
 
         <div class="form-group">
           <label class="form-label">Mật khẩu</label>
-          <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+          <input type="password" class="form-control" name="password" required>
         </div>
 
         <button type="submit" class="btn-login">Đăng nhập</button>
       </form>
-
       <div class="login-note">
-        <i class="bi bi-info-circle"></i> UI demo — chưa kết nối backend
+        <i class="bi bi-info-circle"></i> Vui lòng đăng nhập để tiếp tục
+        <br><br>
+        <div class="row">
+          <div class="col-md-6">
+            <a href="/register" >Đăng ký </a>
+          </div>
+          <div class="col-md-6">
+            <a href="/forgot">Quên mật khẩu</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      // Demo login - just redirect to dashboard
-      window.location.href = 'dashboard.jsp';
-    });
-  </script>
 </body>
 </html>

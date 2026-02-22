@@ -7,7 +7,8 @@
   <title>Chi tiết Hóa đơn - Quản Lý Nhà Trọ</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/view/owner/assets/styles.css">
 </head>
 <body>
   <!-- Sidebar -->
@@ -16,48 +17,48 @@
       <i class="bi bi-buildings"></i> Quản Lý Nhà Trọ
     </div>
     <ul class="nav-menu">
-      <li class="nav-item">
-        <a href="dashboard.jsp" class="nav-link">
+      <li class="nav-item" s>
+        <a href="${pageContext.request.contextPath}/dashboard" class="nav-link ">
           <i class="bi bi-speedometer2"></i> Dashboard
         </a>
       </li>
       <li class="nav-item">
-        <a href="rooms.jsp" class="nav-link">
+        <a href="${pageContext.request.contextPath}/rooms" class="nav-link ">
           <i class="bi bi-door-closed"></i> Phòng
         </a>
       </li>
       <li class="nav-item">
-        <a href="bookings.jsp" class="nav-link">
+        <a href="${pageContext.request.contextPath}/bookings" class="nav-link">
           <i class="bi bi-calendar-check"></i> Đặt phòng
         </a>
       </li>
       <li class="nav-item">
-        <a href="contracts.jsp" class="nav-link">
+        <a href="${pageContext.request.contextPath}/contracts" class="nav-link">
           <i class="bi bi-file-earmark-text"></i> Hợp đồng
         </a>
       </li>
       <li class="nav-item">
-        <a href="utilities.jsp" class="nav-link">
+        <a href="${pageContext.request.contextPath}/utilities" class="nav-link">
           <i class="bi bi-lightning-fill"></i> Điện nước
         </a>
       </li>
       <li class="nav-item">
-        <a href="invoices.jsp" class="nav-link active">
+        <a href="${pageContext.request.contextPath}/invoices" class="nav-link active">
           <i class="bi bi-receipt"></i> Hóa đơn
         </a>
       </li>
       <li class="nav-item">
-        <a href="services.jsp" class="nav-link">
+        <a href="${pageContext.request.contextPath}/services" class="nav-link">
           <i class="bi bi-gear"></i> Dịch vụ
         </a>
       </li>
       <li class="nav-item">
-        <a href="users.jsp" class="nav-link">
+        <a href="${pageContext.request.contextPath}/users" class="nav-link">
           <i class="bi bi-people"></i> Người dùng
         </a>
       </li>
       <li class="nav-item">
-        <a href="reports.jsp" class="nav-link">
+        <a href="${pageContext.request.contextPath}/reports" class="nav-link">
           <i class="bi bi-bar-chart"></i> Báo cáo
         </a>
       </li>
@@ -94,12 +95,12 @@
     <!-- Main Content -->
     <div class="main-content">
       <div class="breadcrumb-nav">
-        <a href="dashboard.jsp">Trang chủ</a> / <a href="invoices.jsp">Hóa đơn</a> / <span>Chi tiết HĐ001</span>
+        <a href="${pageContext.request.contextPath}/dashboard">Trang chủ</a> / <a href="${pageContext.request.contextPath}/invoices">Hóa đơn</a> / <span>Chi tiết HĐ001</span>
       </div>
 
       <div class="page-header">
         <h1 class="page-title">Hóa đơn HĐ001</h1>
-        <a href="invoices.jsp" class="btn-custom btn-outline">
+        <a href="${pageContext.request.contextPath}/invoices" class="btn-custom btn-outline">
           <i class="bi bi-arrow-left"></i> Quay lại
         </a>
       </div>
@@ -249,7 +250,7 @@
 
       <!-- Actions -->
       <div style="display: flex; gap: 10px;">
-        <a href="invoices.jsp" class="btn-custom btn-outline">
+        <a href="${pageContext.request.contextPath}/invoices" class="btn-custom btn-outline">
           <i class="bi bi-arrow-left"></i> Quay lại
         </a>
         <button class="btn-custom btn-primary-custom" onclick="printInvoice()">

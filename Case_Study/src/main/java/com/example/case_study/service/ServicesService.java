@@ -1,51 +1,44 @@
 package com.example.case_study.service;
 
 import com.example.case_study.entity.Services;
+import com.example.case_study.repository.IServicePriceConfigRepository;
 import com.example.case_study.repository.IServicesRepository;
+import com.example.case_study.repository.ServicePriceConfigRepository;
 import com.example.case_study.repository.ServicesRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
+
 public class ServicesService implements IServicesService {
+    private final IServicesRepository servicesRepo = new ServicesRepository();
+    private final IServicePriceConfigRepository priceRepo =
+            new ServicePriceConfigRepository();
 
-    private IServicesRepository servicesRepository;
+    @Override
+    public List<Services> getAllWithPrice() {
+        List<Services> list = servicesRepo.findAll();
 
-    public ServicesService() {
-        servicesRepository = new ServicesRepository();
+        for (Services s : list) {
+            Double price = priceRepo.findCurrentPrice(s.getServiceCode());
+            s.setDefaultPrice(price != null ? price : s.getDefaultPrice());
+        }
+        return list;
     }
 
     @Override
-    public List<Services> getAllServices() {
-        return servicesRepository.getAll();
-    }
+    public void saveOrUpdate(Services s, double price) {
+        if (servicesRepo.findByCode(s.getServiceCode()) == null) {
+            servicesRepo.insert(s);
+        } else {
+            servicesRepo.update(s);
+        }
 
-    @Override
-    public boolean addService(Services service) {
-        return servicesRepository.add(service);
-    }
-
-    @Override
-    public boolean updateService(Services service) {
-        return servicesRepository.update(service);
-    }
-
-    @Override
-    public boolean deleteService(String serviceCode) {
-        return servicesRepository.delete(serviceCode);
-    }
-
-    @Override
-    public Services getServiceByCode(String serviceCode) {
-        return servicesRepository.findByCode(serviceCode);
-    }
-
-    @Override
-    public List<Services> getServicesByType(String serviceType) {
-        return servicesRepository.findByType(serviceType);
-    }
-
-    @Override
-    public List<Services> getServicesByStatus(String status) {
-        return servicesRepository.findByStatus(status);
+        priceRepo.insertPrice(
+                s.getServiceCode(),
+                price,
+                LocalDate.now()
+        );
     }
 }
+
