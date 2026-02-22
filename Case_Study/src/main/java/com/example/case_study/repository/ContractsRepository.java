@@ -1,12 +1,21 @@
 package com.example.case_study.repository;
 
+import util.ConnectDB;
 import com.example.case_study.entity.Contracts;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class ContractsRepository implements IContractsRepository {
+
+    private static final String UPDATE_CONTRACT = "UPDATE contracts SET room_id=?, customer_id=?, start_date=?, end_date=?, deposit=?, status=? WHERE contract_id=?";
+    private static final String GET_ALL_CONTRACTS = "select * from contracts";
 
     private List<Contracts> contractsList;
 
@@ -17,7 +26,33 @@ public class ContractsRepository implements IContractsRepository {
     // Lấy tất cả hợp đồng
     @Override
     public List<Contracts> getAllContracts() {
-        return contractsList;
+        List<Contracts> list = new ArrayList<>();
+        Connection connec = ConnectDB.getConnectDB();
+        System.out.println("Connection trong repository: " + connec);
+        try(
+                PreparedStatement preparedStatement = connec.prepareStatement(GET_ALL_CONTRACTS);
+                ResultSet rs = preparedStatement.executeQuery();
+                ) {
+            while(rs.next()) {
+                int contractId = rs.getInt("contract_id");
+                String roomId = rs.getString("room_id");
+                String customerId = rs.getString("customer_id");
+                LocalDate startDate = rs.getDate("start_date") != null
+                        ? rs.getDate("start_date").toLocalDate()
+                        : null;
+                LocalDate endDate = rs.getDate("end_date") != null
+                        ? rs.getDate("end_date").toLocalDate()
+                        : null;
+                double deposit = rs.getDouble("deposit");
+                String status = rs.getString("status");
+                Date createdAt = rs.getDate("created_at");
+
+                list.add(new Contracts(contractId, roomId, customerId, startDate, endDate, deposit, status, createdAt));
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException("Lỗi lấy danh sách Hợp đồng", e);
+        }
+        return list;
     }
 
     // Thêm hợp đồng
@@ -36,14 +71,22 @@ public class ContractsRepository implements IContractsRepository {
     // Cập nhật hợp đồng
     @Override
     public boolean updateContract(Contracts contract) {
-        if (contract == null) return false;
-
-        for (int i = 0; i < contractsList.size(); i++) {
-            if (contractsList.get(i).getContractId() == contract.getContractId()) {
-                contractsList.set(i, contract);
-                return true;
-            }
-        }
+//        try (Connection conn = ConnectDB.getConnectDB();
+//             PreparedStatement ps = conn.prepareStatement(UPDATE_CONTRACT)) {
+//
+//            ps.setString(1, contract.getRoomId());
+//            ps.setString(2, contract.getCustomerId());
+//            ps.setDate(3, java.sql.Date.valueOf(contract.getStartDate()));
+//            ps.setDate(4, java.sql.Date.valueOf(contract.getEndDate()));
+//            ps.setDouble(5, contract.getDeposit());
+//            ps.setString(6, contract.getStatus());
+//            ps.setInt(7, contract.getContractId());
+//
+//            return ps.executeUpdate() > 0;
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return false;
     }
 
