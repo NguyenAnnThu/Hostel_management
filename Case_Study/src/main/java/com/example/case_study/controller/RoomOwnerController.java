@@ -2,7 +2,7 @@ package com.example.case_study.controller;
 
 import com.example.case_study.entity.Rooms;
 import com.example.case_study.service.IRoomsService;
-import com.example.case_study.service.RoomsService;
+import com.example.case_study.service.RoomOwnerService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,8 +21,8 @@ import java.util.Map;
         maxFileSize = 5 * 1024 * 1024,    // 5MB
         maxRequestSize = 10 * 1024 * 1024 // 10MB
 )
-public class RoomController extends HttpServlet {
-    private IRoomsService roomsService = new RoomsService();
+public class RoomOwnerController extends HttpServlet {
+    private IRoomsService roomsService = new RoomOwnerService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
