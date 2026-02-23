@@ -1,106 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chi tiết Hóa đơn - Quản Lý Nhà Trọ</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  <link rel="stylesheet"
-        href="${pageContext.request.contextPath}/view/owner/assets/styles.css">
+  <c:import url="../layout/library.jsp"></c:import>
 </head>
 <body>
   <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <i class="bi bi-buildings"></i> Quản Lý Nhà Trọ
-    </div>
-    <ul class="nav-menu">
-      <li class="nav-item" s>
-        <a href="${pageContext.request.contextPath}/dashboard" class="nav-link ">
-          <i class="bi bi-speedometer2"></i> Dashboard
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="${pageContext.request.contextPath}/rooms" class="nav-link ">
-          <i class="bi bi-door-closed"></i> Phòng
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="${pageContext.request.contextPath}/bookings" class="nav-link">
-          <i class="bi bi-calendar-check"></i> Đặt phòng
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="${pageContext.request.contextPath}/contracts" class="nav-link">
-          <i class="bi bi-file-earmark-text"></i> Hợp đồng
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="${pageContext.request.contextPath}/utilities" class="nav-link">
-          <i class="bi bi-lightning-fill"></i> Điện nước
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="${pageContext.request.contextPath}/invoices" class="nav-link active">
-          <i class="bi bi-receipt"></i> Hóa đơn
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="${pageContext.request.contextPath}/services" class="nav-link">
-          <i class="bi bi-gear"></i> Dịch vụ
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="${pageContext.request.contextPath}/users" class="nav-link">
-          <i class="bi bi-people"></i> Người dùng
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="${pageContext.request.contextPath}/reports" class="nav-link">
-          <i class="bi bi-bar-chart"></i> Báo cáo
-        </a>
-      </li>
-    </ul>
-  </div>
+  <c:import url="../layout/sidebar.jsp"></c:import>
 
   <!-- Main Wrapper -->
   <div class="main-wrapper">
     <!-- Top Navbar -->
-    <div class="topbar">
-      <div class="topbar-left">
-        <div class="topbar-greeting">Chào mừng, Chủ trọ</div>
-        <div class="topbar-search">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="Tìm kiếm...">
-        </div>
-      </div>
-      <div class="topbar-right">
-        <div class="profile-dropdown">
-          <button class="profile-btn" onclick="toggleProfileMenu()">
-            <div class="profile-avatar">CT</div>
-            <span>Chủ trọ</span>
-            <i class="bi bi-chevron-down"></i>
-          </button>
-          <div class="dropdown-menu-custom" id="profileMenu">
-            <div class="dropdown-item-custom">Hồ sơ cá nhân</div>
-            <div class="dropdown-item-custom">Cài đặt</div>
-            <div class="dropdown-item-custom" onclick="logout()">Đăng xuất</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <c:import url="../layout/topbar.jsp"></c:import>
 
     <!-- Main Content -->
     <div class="main-content">
       <div class="breadcrumb-nav">
-        <a href="${pageContext.request.contextPath}/dashboard">Trang chủ</a> / <a href="${pageContext.request.contextPath}/invoices">Hóa đơn</a> / <span>Chi tiết HĐ001</span>
+        <a href="dashboard.jsp">Trang chủ</a> / <a href="invoices.jsp">Hóa đơn</a> / <span>Chi tiết HĐ001</span>
       </div>
 
       <div class="page-header">
         <h1 class="page-title">Hóa đơn HĐ001</h1>
-        <a href="${pageContext.request.contextPath}/invoices" class="btn-custom btn-outline">
+        <a href="invoices.jsp" class="btn-custom btn-outline">
           <i class="bi bi-arrow-left"></i> Quay lại
         </a>
       </div>
@@ -250,7 +175,7 @@
 
       <!-- Actions -->
       <div style="display: flex; gap: 10px;">
-        <a href="${pageContext.request.contextPath}/invoices" class="btn-custom btn-outline">
+        <a href="invoices.jsp" class="btn-custom btn-outline">
           <i class="bi bi-arrow-left"></i> Quay lại
         </a>
         <button class="btn-custom btn-primary-custom" onclick="printInvoice()">
@@ -265,23 +190,6 @@
     function printInvoice() {
       window.print();
     }
-
-    function toggleProfileMenu() {
-      const menu = document.getElementById('profileMenu');
-      menu.classList.toggle('show');
-    }
-
-    function logout() {
-      window.location.href = 'login.jsp';
-    }
-
-    document.addEventListener('click', function(event) {
-      const menu = document.getElementById('profileMenu');
-      const btn = document.querySelector('.profile-btn');
-      if (menu && btn && !menu.contains(event.target) && !btn.contains(event.target)) {
-        menu.classList.remove('show');
-      }
-    });
   </script>
 </body>
 </html>

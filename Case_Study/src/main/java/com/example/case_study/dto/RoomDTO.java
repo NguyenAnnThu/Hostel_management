@@ -1,8 +1,8 @@
-package com.example.case_study.entity;
+package com.example.case_study.dto;
 
 import java.util.Date;
 
-public class Rooms {
+public class RoomDTO {
     private String roomId;
     private int floor;
     private double area;
@@ -13,11 +13,12 @@ public class Rooms {
     private String image;
     private Date createdAt;
     private Date updatedAt;
+    private String tenantName;
 
-    public Rooms() {
+    public RoomDTO() {
     }
 
-    public Rooms(String roomId, int floor, double area, double price, int maxOccupants, String description, String status, String image, Date createdAt, Date updatedAt) {
+    public RoomDTO(String roomId, int floor, double area, double price, int maxOccupants, String description, String status, String image, Date createdAt, Date updatedAt, String tenantName) {
         this.roomId = roomId;
         this.floor = floor;
         this.area = area;
@@ -28,6 +29,7 @@ public class Rooms {
         this.image = image;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.tenantName = tenantName;
     }
 
     public String getRoomId() {
@@ -108,5 +110,13 @@ public class Rooms {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getTenantName() {
+        return tenantName;
+    }
+
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
     }
 }

@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 public class RoomsRepository implements IRoomsRepository {
-    private static final String GET_ALL_ROOMS = "select r.room_id, r.floor, r.area, r.price, r.status, r.updated_at, u.full_name AS tenant_name "
+    private static final String GET_ALL_ROOMS = "select r.room_id, r.floor, r.area, r.price, r.status, r.image, r.updated_at, u.full_name AS tenant_name "
             +
             "from rooms r " +
             "left join room_tenants rt " +
@@ -71,12 +71,12 @@ public class RoomsRepository implements IRoomsRepository {
                 String status = resultSet.getString("status");
                 Date createdAt = resultSet.getDate("created_at");
                 Date updatedAt = resultSet.getDate("updated_at");
-//                String image = resultSet.getString("image");
+                String image = resultSet.getString("image");
 
-//                roomsList.add(new Rooms(roomId, floor, area, price, maxOccupants, description, status, createdAt,
-//                        updatedAt, image));
-                roomsList.add(new Rooms(roomId, floor, area, price, maxOccupants, description, status, createdAt,
+                roomsList.add(new Rooms(roomId, floor, area, price, maxOccupants, description, status, image, createdAt,
                         updatedAt));
+//                roomsList.add(new Rooms(roomId, floor, area, price, maxOccupants, description, status, createdAt,
+//                        updatedAt));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -142,6 +142,7 @@ public class RoomsRepository implements IRoomsRepository {
                         rs.getInt("max_occupants"),
                         rs.getString("description"),
                         rs.getString("status"),
+                        rs.getString("image"),
                         rs.getDate("created_at"),
                         rs.getDate("updated_at")
                 );

@@ -1,16 +1,19 @@
 package com.example.case_study.repository;
 
+import com.example.case_study.dto.RoomDTO;
 import com.example.case_study.entity.Rooms;
-import dto.RoomDTO;
 
 import java.util.List;
 
-public interface IRoomsRepository {
+public interface IRoomOwnerRepository {
 
-    List<RoomDTO> getAllRooms();
+    List<Rooms> getAllRooms();
 
-    // lấy toàn bộ phòng hiển thị cho user
-    List<Rooms> getRoomsList();
+    List<RoomDTO> getAllRoomsDTO();
+
+    List<Integer> getAllFloors();
+
+    List<String> getAllStatus();
 
     boolean addRoom(Rooms room);
 
@@ -24,5 +27,5 @@ public interface IRoomsRepository {
 
     List<Rooms> findByFloor(int floor);
 
-    List<Rooms> searchRooms(String roomName, Integer floor);
+    List<RoomDTO> filterRooms(int floor, String status, double minPrice, double maxPrice, String roomId);
 }
