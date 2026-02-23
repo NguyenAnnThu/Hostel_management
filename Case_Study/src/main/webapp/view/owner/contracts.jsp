@@ -20,17 +20,17 @@
     </div>
     <ul class="nav-menu">
         <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/dashboard.jsp" class="nav-link">
+            <a href="${pageContext.request.contextPath}/view/owner/dashboard.jsp" class="nav-link">
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
         </li>
         <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/rooms.jsp" class="nav-link">
+            <a href="${pageContext.request.contextPath}/view/owner/rooms.jsp" class="nav-link">
                 <i class="bi bi-door-closed"></i> Phòng
             </a>
         </li>
         <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/bookings.jsp" class="nav-link">
+            <a href="${pageContext.request.contextPath}/view/owner/bookings.jsp" class="nav-link">
                 <i class="bi bi-calendar-check"></i> Đặt phòng
             </a>
         </li>
@@ -40,27 +40,27 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/utilities.jsp" class="nav-link">
+            <a href="${pageContext.request.contextPath}/view/owner/utilities.jsp" class="nav-link">
                 <i class="bi bi-lightning-fill"></i> Điện nước
             </a>
         </li>
         <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/invoices.jsp" class="nav-link">
+            <a href="${pageContext.request.contextPath}/view/owner/invoices.jsp" class="nav-link">
                 <i class="bi bi-receipt"></i> Hóa đơn
             </a>
         </li>
         <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/services.jsp" class="nav-link">
+            <a href="${pageContext.request.contextPath}/view/owner/services.jsp" class="nav-link">
                 <i class="bi bi-gear"></i> Dịch vụ
             </a>
         </li>
         <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/users.jsp" class="nav-link">
+            <a href="${pageContext.request.contextPath}/view/owner/users.jsp" class="nav-link">
                 <i class="bi bi-people"></i> Người dùng
             </a>
         </li>
         <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/reports.jsp" class="nav-link">
+            <a href="${pageContext.request.contextPath}/view/owner/reports.jsp" class="nav-link">
                 <i class="bi bi-bar-chart"></i> Báo cáo
             </a>
         </li>

@@ -33,7 +33,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="${pageContext.request.contextPath}/contracts" class="nav-link">
+        <a href="${pageContext.request.contextPath}/contract" class="nav-link">
           <i class="bi bi-file-earmark-text"></i> Hợp đồng
         </a>
       </li>
