@@ -4,6 +4,7 @@ import com.example.case_study.entity.Contracts;
 import com.example.case_study.service.ContractsDtoService;
 import com.example.case_study.service.ContractsService;
 import com.example.case_study.service.RoomsService;
+import dto.ContractDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -35,7 +36,7 @@ public class ContractsController extends HttpServlet {
             updateContract(req, resp);
         } else if ("add".equals(action)) {
             addContract(req, resp);
-        }else if ("delete".equals(action)) {
+        } else if ("delete".equals(action)) {
             deleteContract(req, resp);
         }
     }
@@ -49,34 +50,111 @@ public class ContractsController extends HttpServlet {
         double deposit = Double.parseDouble(req.getParameter("deposit"));
         String status = req.getParameter("status");
 
-        contractsService.addContract(
+        boolean added = contractsService.addContract(
                 roomId, customerId, startDate, endDate, deposit, status
         );
+
+        if (added) {
+            roomsService.updateRoomStatus(roomId, "Đang thuê");
+        }
 
         resp.sendRedirect(req.getContextPath() + "/contract");
     }
 
+    //    private void addContract(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+//
+//        String roomId = req.getParameter("roomId");
+//        String customerId = req.getParameter("customerId");
+//        LocalDate startDate = LocalDate.parse(req.getParameter("startDate"));
+//        LocalDate endDate = LocalDate.parse(req.getParameter("endDate"));
+//        double deposit = Double.parseDouble(req.getParameter("deposit"));
+//        String status = req.getParameter("status");
+//
+//        contractsService.addContract(
+//                roomId, customerId, startDate, endDate, deposit, status
+//        );
+//
+//        resp.sendRedirect(req.getContextPath() + "/contract");
+//    }
     private void updateContract(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
         int id = Integer.parseInt(req.getParameter("contractId"));
-        String roomId = req.getParameter("roomId");
+        String newRoomId = req.getParameter("roomId");
+
+        // Lấy hợp đồng cũ
+        ContractDTO oldContract = contractsService.getAllContracts()
+                .stream()
+                .filter(c -> c.getContractId() == id)
+                .findFirst()
+                .orElse(null);
+
+        String oldRoomId = oldContract != null ? oldContract.getRoomId() : null;
+
         String customerId = req.getParameter("customerId");
         LocalDate startDate = LocalDate.parse(req.getParameter("startDate"));
         LocalDate endDate = LocalDate.parse(req.getParameter("endDate"));
         double deposit = Double.parseDouble(req.getParameter("deposit"));
         String status = req.getParameter("status");
 
-        contractsService.updateContract(
-                id, roomId, customerId, startDate, endDate, deposit, status
+        boolean updated = contractsService.updateContract(
+                id, newRoomId, customerId, startDate, endDate, deposit, status
         );
 
-        resp.sendRedirect(req.getContextPath() + "/contract?action=listContracts");
-    }
+        if (updated) {
 
-    private void deleteContract(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        int id = Integer.parseInt(req.getParameter("contractId"));
+            // Nếu đổi phòng
+            if (oldRoomId != null && !oldRoomId.equals(newRoomId)) {
 
-        contractsService.deleteContract(id);
+                roomsService.updateRoomStatus(oldRoomId, "Còn trống");
+                roomsService.updateRoomStatus(newRoomId, "Đang thuê");
+
+            }
+        }
 
         resp.sendRedirect(req.getContextPath() + "/contract");
     }
+
+    //    private void updateContract(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+//        int id = Integer.parseInt(req.getParameter("contractId"));
+//        String roomId = req.getParameter("roomId");
+//        String customerId = req.getParameter("customerId");
+//        LocalDate startDate = LocalDate.parse(req.getParameter("startDate"));
+//        LocalDate endDate = LocalDate.parse(req.getParameter("endDate"));
+//        double deposit = Double.parseDouble(req.getParameter("deposit"));
+//        String status = req.getParameter("status");
+//
+//        contractsService.updateContract(
+//                id, roomId, customerId, startDate, endDate, deposit, status
+//        );
+//
+//        resp.sendRedirect(req.getContextPath() + "/contract?action=listContracts");
+//    }
+    private void deleteContract(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        int id = Integer.parseInt(req.getParameter("contractId"));
+
+        // Lấy roomId trước khi xoá
+        ContractDTO contract = contractsService.getAllContracts()
+                .stream()
+                .filter(c -> c.getContractId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (contract != null) {
+            boolean deleted = contractsService.deleteContract(id);
+
+            if (deleted) {
+                roomsService.updateRoomStatus(contract.getRoomId(), "Còn trống");
+            }
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/contract");
+    }
+//    private void deleteContract(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+//        int id = Integer.parseInt(req.getParameter("contractId"));
+//
+//        contractsService.deleteContract(id);
+//
+//        resp.sendRedirect(req.getContextPath() + "/contract");
+//    }
 }

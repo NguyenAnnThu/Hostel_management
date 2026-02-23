@@ -221,9 +221,11 @@
                         <label>Phòng</label>
                         <select name="roomId" class="form-control" required>
                             <c:forEach var="room" items="${roomList}">
-                                <option value="${room.roomId}">
-                                        ${room.roomId}
-                                </option>
+<%--                                <c:if test="${room.status.equals('available')}">--%>
+                                    <option value="${room.roomId}">
+                                            ${room.roomId}
+                                    </option>
+<%--                                </c:if>--%>
                             </c:forEach>
                         </select>
                     </div>

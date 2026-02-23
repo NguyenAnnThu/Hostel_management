@@ -11,6 +11,10 @@ public class RoomsService implements IRoomsService {
 
     private IRoomsRepository roomsRepository;
 
+    public boolean updateRoomStatus(String roomId, String status) {
+        return roomsRepository.updateRoomStatus(roomId, status);
+    }
+
     public RoomsService() {
         roomsRepository = new RoomsRepository();
     }

@@ -9,6 +9,8 @@ public interface IRoomsRepository {
 
     List<RoomDTO> getAllRooms();
 
+    boolean updateRoomStatus(String roomId, String status);
+
     // lấy toàn bộ phòng hiển thị cho user
     List<Rooms> getRoomsList();
 
