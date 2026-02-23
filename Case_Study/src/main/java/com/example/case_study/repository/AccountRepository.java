@@ -3,6 +3,7 @@ package com.example.case_study.repository;
 import com.example.case_study.common.DBConnection;
 import com.example.case_study.entity.Account;
 import com.example.case_study.entity.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,11 +26,11 @@ public class AccountRepository implements IAccountRepository {
     
 """;
     private static final  String LOGIN_SQL = """
-        SELECT a.phone, a.role,
+        SELECT a.phone, a.role, a.password,
                u.user_id, u.full_name, u.status
         FROM accounts a
         JOIN users u ON a.phone = u.phone
-        WHERE a.phone = ? AND a.password = ?
+        WHERE a.phone = ?
     """;
     private static final String CHECK_PHONE_SQL =
             "SELECT 1 FROM users WHERE phone = ?";
@@ -51,11 +52,13 @@ public class AccountRepository implements IAccountRepository {
              PreparedStatement ps = conn.prepareStatement(LOGIN_SQL)) {
 
             ps.setString(1, phone);
-            ps.setString(2, password);
 
             ResultSet rs = ps.executeQuery();
 
             if (!rs.next()) return null;
+
+            String hashedPassword = rs.getString("password");
+            if (!BCrypt.checkpw(password, hashedPassword)) return null;
 
             User user = new User();
             user.setUserId(rs.getString("user_id"));
@@ -164,7 +167,7 @@ public class AccountRepository implements IAccountRepository {
                 // ACCOUNTS (ROLE FIX CỨNG)
                 psAcc.setString(1, user.getPhone());
                 psAcc.setString(2, account.getPassword());
-                psAcc.setString(3, "USER"); // ❗ BẮT BUỘC
+                psAcc.setString(3, account.getRole()); // ❗ BẮT BUỘC
                 psAcc.executeUpdate();
 
                 conn.commit();

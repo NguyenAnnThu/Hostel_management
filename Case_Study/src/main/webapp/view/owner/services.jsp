@@ -18,58 +18,7 @@
 
 <!-- ================= SIDEBAR ================= -->
 <!-- Sidebar -->
-<div class="sidebar">
-  <div class="sidebar-logo">
-    <i class="bi bi-buildings"></i> Quản Lý Nhà Trọ
-  </div>
-  <ul class="nav-menu">
-    <li class="nav-item" s>
-      <a href="${pageContext.request.contextPath}/dashboard" class="nav-link ">
-        <i class="bi bi-speedometer2"></i> Dashboard
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="${pageContext.request.contextPath}/rooms" class="nav-link ">
-        <i class="bi bi-door-closed"></i> Phòng
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="${pageContext.request.contextPath}/bookings" class="nav-link">
-        <i class="bi bi-calendar-check"></i> Đặt phòng
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="${pageContext.request.contextPath}/contract" class="nav-link">
-        <i class="bi bi-file-earmark-text"></i> Hợp đồng
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="${pageContext.request.contextPath}/utilities" class="nav-link">
-        <i class="bi bi-lightning-fill"></i> Điện nước
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="${pageContext.request.contextPath}/invoices" class="nav-link">
-        <i class="bi bi-receipt"></i> Hóa đơn
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="${pageContext.request.contextPath}/services" class="nav-link active">
-        <i class="bi bi-gear"></i> Dịch vụ
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="${pageContext.request.contextPath}/users" class="nav-link">
-        <i class="bi bi-people"></i> Người dùng
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="${pageContext.request.contextPath}/reports" class="nav-link">
-        <i class="bi bi-bar-chart"></i> Báo cáo
-      </a>
-    </li>
-  </ul>
-</div>
+<c:import url="../layout/sidebar.jsp"></c:import>
 
 
 <!-- ================= MAIN ================= -->
@@ -187,7 +136,6 @@
           <label>Đơn vị</label>
           <input type="text" name="unit" id="unit" class="form-control">
         </div>
-
         <div class="mb-2">
           <label>Đơn giá</label>
           <input type="number" name="defaultPrice" id="defaultPrice" class="form-control">

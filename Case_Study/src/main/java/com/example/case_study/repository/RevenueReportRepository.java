@@ -30,8 +30,13 @@ public class RevenueReportRepository implements IRevenueReportRepository{
     }
 
     @Override
-    public int countPendingBookings() {
-        return countBySQL("SELECT COUNT(*) FROM bookings WHERE status='pending'");
+        public int countPendingBookings() {
+        return countBySQL("SELECT COUNT(*) FROM rooms WHERE status='pending'");
+    }
+
+    @Override
+    public int countMaintenanceRooms() {
+        return countBySQL("SELECT COUNT(*) FROM rooms WHERE status='maintenance'");
     }
 
     @Override
