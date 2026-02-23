@@ -6,7 +6,7 @@ import com.example.case_study.entity.Rooms;
 import java.util.List;
 import java.util.Map;
 
-public interface IRoomsService {
+public interface IRoomOwnerService {
 
     List<Rooms> getAllRooms();
 

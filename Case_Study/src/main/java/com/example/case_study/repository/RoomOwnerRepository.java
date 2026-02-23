@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class RoomOwnerRepository implements IRoomsRepository {
+public class RoomOwnerRepository implements IRoomOwnerRepository {
     private static final String ADD_ROOM = "insert into rooms(room_id, floor, area, price, max_occupants, description, status, image) values(?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_ROOM_BY_ID = "select r.room_id, r.floor, r.area, r.price, r.max_occupants, r.description, r.status, r.image, r.created_at, r.updated_at from rooms r WHERE r.room_id = ? AND r.is_deleted = 0";
     private static final String GET_ALL_ROOMS = "select * from rooms WHERE is_deleted = 0 order by floor, room_id";

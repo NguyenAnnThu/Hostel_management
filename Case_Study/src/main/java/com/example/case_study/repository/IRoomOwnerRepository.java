@@ -5,7 +5,7 @@ import com.example.case_study.entity.Rooms;
 
 import java.util.List;
 
-public interface IRoomsRepository {
+public interface IRoomOwnerRepository {
 
     List<Rooms> getAllRooms();
 

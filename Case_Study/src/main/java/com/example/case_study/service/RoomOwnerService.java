@@ -2,16 +2,16 @@ package com.example.case_study.service;
 
 import com.example.case_study.dto.RoomDTO;
 import com.example.case_study.entity.Rooms;
-import com.example.case_study.repository.IRoomsRepository;
+import com.example.case_study.repository.IRoomOwnerRepository;
 import com.example.case_study.repository.RoomOwnerRepository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RoomOwnerService implements IRoomsService {
+public class RoomOwnerService implements IRoomOwnerService {
 
-    private IRoomsRepository roomsRepository = new RoomOwnerRepository();
+    private IRoomOwnerRepository roomsRepository = new RoomOwnerRepository();
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
     private static final List<String> ALLOWED_EXTENSIONS = List.of("jpg", "jpeg", "png", "webp");
 
