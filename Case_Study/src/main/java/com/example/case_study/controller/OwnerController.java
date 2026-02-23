@@ -24,17 +24,26 @@ public class OwnerController extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/owner/bookings");
                 break;
             case "contracts":
-                resp.sendRedirect(req.getContextPath() + "/owner/contracts");
+                resp.sendRedirect(req.getContextPath() + "/contract");
                 break;
             case "invoices":
-                resp.sendRedirect(req.getContextPath() + "/owner/invoices");
+                resp.sendRedirect(req.getContextPath() + "/invoices");
+                break;
+            case "utilities":
+                resp.sendRedirect(req.getContextPath() + "/utilities");
+                break;
+            case "services":
+                resp.sendRedirect(req.getContextPath() + "/services");
+                break;
+            case "users":
+                resp.sendRedirect(req.getContextPath() + "/users");
                 break;
             case "reports":
                 resp.sendRedirect(req.getContextPath() + "/owner/reports");
                 break;
             case "dashboard":
             default:
-                resp.sendRedirect(req.getContextPath() + "/owner/dashboard");
+                resp.sendRedirect(req.getContextPath() + "/dashboard");
                 break;
         }
     }

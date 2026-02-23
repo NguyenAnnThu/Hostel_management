@@ -27,6 +27,11 @@ public class RevenueReportService implements IRevenueReportService{
     }
 
     @Override
+    public int getMaintenanceRooms() {
+        return repo.countMaintenanceRooms();
+    }
+
+    @Override
     public int getPendingBookings() {
         return repo.countPendingBookings();
     }

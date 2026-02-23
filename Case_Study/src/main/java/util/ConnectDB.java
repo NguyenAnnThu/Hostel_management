@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class ConnectDB {
     private static final String URL = "jdbc:mysql://localhost:3306/cs_property_management"; // Tên cơ sở dữ liệu
     private static final String USER = "root"; // Mặc định của mysql
-    private static final String PASS = "19052005"; // Mật khẩu mysql của bạn
+    private static final String PASS = "123456"; // Mật khẩu mysql của bạn
 
     // Mở kết nối
     public static Connection getConnectDB() {

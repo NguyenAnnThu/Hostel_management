@@ -9,6 +9,7 @@ public interface IRevenueReportService {
     int getTotalRooms();
     int getAvailableRooms();
     int getRentedRooms();
+    int getMaintenanceRooms();
     int getPendingBookings();
     int getUnpaidInvoices();
 

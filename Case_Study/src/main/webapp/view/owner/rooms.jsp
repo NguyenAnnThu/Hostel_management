@@ -55,6 +55,7 @@
                                     <c:when test="${status == 'available'}">Trống</c:when>
                                     <c:when test="${status == 'rented'}">Đang thuê</c:when>
                                     <c:when test="${status == 'maintenance'}">Bảo trì</c:when>
+                                    <c:when test="${status == 'pending'}">Phòng chờ</c:when>
                                     <c:otherwise>${status}</c:otherwise>
                                 </c:choose>
                             </option>
@@ -134,6 +135,10 @@
 
                                     <c:when test="${room.status == 'maintenance'}">
                                         <span class="badge-custom badge-danger">BẢO TRÌ</span>
+                                    </c:when>
+
+                                    <c:when test="${room.status == 'pending'}">
+                                        <span class="badge-custom badge-info">PHÒNG CHỜ</span>
                                     </c:when>
 
                                     <c:otherwise>
