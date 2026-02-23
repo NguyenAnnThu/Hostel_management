@@ -11,6 +11,7 @@ public interface IRevenueReportRepository {
     int countAvailableRooms();
     int countRentedRooms();
     int countPendingBookings();
+    int countMaintenanceRooms();
     int countUnpaidInvoices();
 
     double getMonthlyRevenue(int month, int year);

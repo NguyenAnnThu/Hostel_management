@@ -21,6 +21,7 @@ public class RevenueReportController extends HttpServlet {
         req.setAttribute("availableRooms", service.getAvailableRooms());
         req.setAttribute("rentedRooms", service.getRentedRooms());
         req.setAttribute("pendingBookings", service.getPendingBookings());
+        req.setAttribute("maintenanceRooms", service.getMaintenanceRooms());
         req.setAttribute("unpaidInvoices", service.getUnpaidInvoices());
         req.setAttribute("monthlyRevenue", service.getLatestMonthRevenue());
         req.setAttribute("chartData", service.getLast3MonthsRevenue());

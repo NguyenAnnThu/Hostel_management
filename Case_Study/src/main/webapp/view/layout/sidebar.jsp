@@ -28,8 +28,23 @@
       </a>
     </li>
     <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/owner?page=utilities" class="nav-link <%= currentURI.contains("utilities") ? "active" : "" %>">
+        <i class="bi bi-lightning-fill"></i> Điện nước
+      </a>
+    </li>
+    <li class="nav-item">
       <a href="${pageContext.request.contextPath}/owner?page=invoices" class="nav-link <%= currentURI.contains("invoices") ? "active" : "" %>">
         <i class="bi bi-receipt"></i> Hóa đơn
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/owner?page=services" class="nav-link <%= currentURI.contains("services") ? "active" : "" %>">
+        <i class="bi bi-gear"></i> Dịch vụ
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="${pageContext.request.contextPath}/owner?page=users" class="nav-link <%= currentURI.contains("users") ? "active" : "" %>">
+        <i class="bi bi-people"></i> Người dùng
       </a>
     </li>
     <li class="nav-item">

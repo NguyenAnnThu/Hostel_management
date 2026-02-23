@@ -25,7 +25,7 @@
 
       <div class="page-header">
         <h1 class="page-title">Hóa đơn HĐ001</h1>
-        <a href="invoices.jsp" class="btn-custom btn-outline">
+        <a href="${pageContext.request.contextPath}/invoices" class="btn-custom btn-outline">
           <i class="bi bi-arrow-left"></i> Quay lại
         </a>
       </div>
