@@ -365,5 +365,6 @@
       document.getElementById('createInvoiceModal').classList.remove('show');
     }
   </script>
+  </c:forEach>
 </body>
 </html>

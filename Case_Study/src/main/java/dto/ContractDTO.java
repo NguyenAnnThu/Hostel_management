@@ -1,9 +1,9 @@
-package com.example.case_study.entity;
+package dto;
 
 import java.time.LocalDate;
 import java.util.Date;
 
-public class Contracts {
+public class ContractDTO {
     private int contractId;
     private String roomId;
     private String customerId;
@@ -12,11 +12,12 @@ public class Contracts {
     private double deposit;
     private String status;
     private Date createdAt;
+    private String name;
 
-    public Contracts() {
+    public ContractDTO() {
     }
 
-    public Contracts(int contractId, String roomId, String customerId, LocalDate startDate, LocalDate endDate, double deposit, String status, Date createdAt) {
+    public ContractDTO(int contractId, String roomId, String customerId, LocalDate startDate, LocalDate endDate, double deposit, String status, Date createdAt, String name) {
         this.contractId = contractId;
         this.roomId = roomId;
         this.customerId = customerId;
@@ -25,6 +26,7 @@ public class Contracts {
         this.deposit = deposit;
         this.status = status;
         this.createdAt = createdAt;
+        this.name = name;
     }
 
     public int getContractId() {
@@ -89,5 +91,13 @@ public class Contracts {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

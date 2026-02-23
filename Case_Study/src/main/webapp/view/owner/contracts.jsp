@@ -19,206 +19,299 @@
 
     <!-- Main Content -->
     <div class="main-content">
-      <div class="breadcrumb-nav">
-        <a href="dashboard.jsp">Trang chủ</a> / <span>Hợp đồng</span>
-      </div>
+        <div class="breadcrumb-nav">
+            <a href="dashboard.jsp">Trang chủ</a> / <span>Hợp đồng</span>
+        </div>
 
-      <div class="page-header">
-        <h1 class="page-title">Quản lý Hợp đồng</h1>
-      </div>
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <h1 class="page-title">Quản lý Hợp đồng</h1>
 
-      <!-- Filters -->
-      <div class="filter-section">
-        <div class="filter-group">
-          <label>Trạng thái</label>
-          <select id="statusFilter" class="form-control">
-            <option value="">-- Chọn trạng thái --</option>
-            <option value="hiệu lực">Hiệu lực</option>
-            <option value="kết thúc">Kết thúc</option>
-          </select>
+            <button class="btn btn-success"
+                    onclick="openAddModal()">
+                <i class="bi bi-plus-circle"></i> Thêm hợp đồng
+            </button>
         </div>
-        <div class="filter-group">
-          <label>Phòng</label>
-          <select id="roomFilter" class="form-control">
-            <option value="">-- Chọn phòng --</option>
-            <option value="P101">P101</option>
-            <option value="P102">P102</option>
-            <option value="P201">P201</option>
-            <option value="P205">P205</option>
-            <option value="P301">P301</option>
-          </select>
-        </div>
-        <div class="filter-actions">
-          <button class="btn-custom btn-primary-custom">
-            <i class="bi bi-funnel"></i> Lọc
-          </button>
-          <button class="btn-custom btn-outline" onclick="resetFilters()">
-            <i class="bi bi-arrow-clockwise"></i> Đặt lại
-          </button>
-        </div>
-      </div>
 
-      <!-- Table -->
-      <div class="card-custom">
-        <div class="table-responsive">
-          <table class="table-custom">
-            <thead>
-              <tr>
-                <th>Mã HĐ</th>
-                <th>Phòng</th>
-                <th>Người thuê</th>
-                <th>Ngày bắt đầu</th>
-                <th>Ngày kết thúc</th>
-                <th>Tiền cọc (VND)</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>HĐ001</strong></td>
-                <td>P101</td>
-                <td>Nguyễn Văn A</td>
-                <td>01/11/2024</td>
-                <td>31/10/2025</td>
-                <td>7.0M</td>
-                <td><span class="badge-custom badge-success">Hiệu lực</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom">Xem</button>
-                    <button class="btn-custom btn-primary-custom" onclick="editContract()">Sửa</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>HĐ002</strong></td>
-                <td>P205</td>
-                <td>Phạm Minh C</td>
-                <td>15/08/2024</td>
-                <td>14/02/2025</td>
-                <td>9.6M</td>
-                <td><span class="badge-custom badge-success">Hiệu lực</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom">Xem</button>
-                    <button class="btn-custom btn-primary-custom" onclick="editContract()">Sửa</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>HĐ003</strong></td>
-                <td>P301</td>
-                <td>Trần Thị B</td>
-                <td>20/05/2024</td>
-                <td>19/08/2024</td>
-                <td>11.4M</td>
-                <td><span class="badge-custom badge-danger">Kết thúc</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom">Xem</button>
-                    <button class="btn-custom btn-success">Trả phòng</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>HĐ004</strong></td>
-                <td>P102</td>
-                <td>Lê Thị D</td>
-                <td>10/02/2024</td>
-                <td>09/05/2024</td>
-                <td>8.4M</td>
-                <td><span class="badge-custom badge-danger">Kết thúc</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-primary-custom">Xem</button>
-                    <button class="btn-custom btn-secondary">Trả phòng</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- Filters -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>Trạng thái</label>
+                <select id="statusFilter" class="form-control">
+                    <option value="">-- Chọn trạng thái --</option>
+                    <option value="hiệu lực">Đã đặt</option>
+                    <option value="kết thúc">Đã trả</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Phòng</label>
+                <select id="roomFilter" class="form-control" name="action" value="roomList">
+                    <option value="">-- Chọn phòng --</option>
+                    <c:forEach var="room" items="${roomList}">
+                        <option>${room.roomId}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button class="btn-custom btn-primary-custom">
+                    <i class="bi bi-funnel"></i> Lọc
+                </button>
+                <button class="btn-custom btn-outline" onclick="resetFilters()">
+                    <i class="bi bi-arrow-clockwise"></i> Đặt lại
+                </button>
+            </div>
         </div>
-      </div>
+
+        <!-- Table -->
+        <div class="card-custom">
+            <div class="table-responsive">
+                <table class="table-custom">
+                    <thead>
+                    <tr>
+                        <th>Mã HĐ</th>
+                        <th>Phòng</th>
+                        <th>Người thuê</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Tiền cọc (VND)</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="c" items="${contractsList}">
+                        <tr>
+                            <td><strong>${c.contractId}</strong></td>
+                            <td>${c.roomId}</td>
+                            <td>${c.name}</td>
+                            <td>${c.startDate}</td>
+                            <td>${c.endDate}</td>
+                            <td>${c.deposit} VND</td>
+                            <td><span class="badge-custom badge-success">${c.status}</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <form method="post"
+                                          action="${pageContext.request.contextPath}/contract"
+                                          onsubmit="return confirmDelete();"
+                                          style="display:inline;">
+
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="contractId" value="${c.contractId}">
+
+                                        <button type="submit" class="btn-custom btn-primary-custom btn-danger">
+                                            Xoá
+                                        </button>
+                                    </form>
+
+                                    <button class="btn-custom btn-primary-custom"
+                                            onclick="editContract(
+                                                    '${c.contractId}',
+                                                    '${c.roomId}',
+                                                    '${c.name}',
+                                                    '${c.customerId}',
+                                                    '${c.startDate}',
+                                                    '${c.endDate}',
+                                                    '${c.deposit}',
+                                                    '${c.status}'
+                                                    )"> Sửa
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </c:forEach>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
+<!-- ADD CONTRACT MODAL -->
+<div class="modal fade" id="addContractModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-  <!-- Contract Modal -->
-  <div class="modal-overlay" id="contractModal">
-    <div class="modal-content" style="max-width: 550px;">
-      <div class="modal-header">
-        <h5 id="modalTitle">Chỉnh sửa Hợp đồng</h5>
-        <button class="modal-close-btn" onclick="closeContractModal()">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">Phòng</label>
-          <select class="form-control">
-            <option>P101</option>
-            <option>P102</option>
-            <option>P201</option>
-            <option>P205</option>
-            <option>P301</option>
-          </select>
+            <form method="post" action="${pageContext.request.contextPath}/contract">
+                <input type="hidden" name="action" value="add">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Thêm hợp đồng mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label>Phòng</label>
+                        <select name="roomId" class="form-control" required>
+                            <c:forEach var="room" items="${roomList}">
+                                <option value="${room.roomId}">
+                                        ${room.roomId}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Mã khách hàng</label>
+                        <input type="text" name="customerId" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Ngày bắt đầu</label>
+                        <input type="date" name="startDate" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Ngày kết thúc</label>
+                        <input type="date" name="endDate" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Tiền cọc</label>
+                        <input type="number" name="deposit" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Trạng thái</label>
+                        <select name="status" class="form-control">
+                            <option value="Đã đặt">Đã đặt</option>
+                            <option value="Đã trả">Đã trả</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Thêm mới</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+
+            </form>
+
         </div>
-        <div class="form-group">
-          <label class="form-label">Người thuê</label>
-          <select class="form-control">
-            <option>Nguyễn Văn A</option>
-            <option>Trần Thị B</option>
-            <option>Phạm Minh C</option>
-            <option>Lê Thị D</option>
-            <option>Hoàng Văn E</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Ngày bắt đầu</label>
-            <input type="date" class="form-control" value="2024-11-01">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Ngày kết thúc</label>
-            <input type="date" class="form-control" value="2025-10-31">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Tiền cọc (VND)</label>
-          <input type="number" class="form-control" value="7000000">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Trạng thái</label>
-          <select class="form-control">
-            <option selected>Hiệu lực</option>
-            <option>Kết thúc</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-custom btn-secondary" onclick="closeContractModal()">Hủy</button>
-        <button class="btn-custom btn-primary-custom">Lưu thay đổi</button>
-      </div>
     </div>
-  </div>
+</div>
+<!-- MODAL -->
+<div class="modal fade" id="contractModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    function editContract() {
-      document.getElementById('contractModal').classList.add('show');
+            <form method="post" action="${pageContext.request.contextPath}/contract">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" id="contractId" name="contractId">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Chỉnh sửa hợp đồng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="customerId" name="customerId">
+                    <div class="mb-3">
+                        <label>Phòng</label>
+                        <input type="text" id="roomId" name="roomId" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Người thuê</label>
+                        <input type="text" id="name" name="name" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Ngày bắt đầu</label>
+                        <input type="date" id="startDate" name="startDate" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Ngày kết thúc</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Tiền cọc</label>
+                        <input type="number" id="deposit" name="deposit" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Trạng thái</label>
+                        <select id="status" name="status" class="form-control">
+                            <option value="Đã đặt">Đã đặt</option>
+                            <option value="Đã trả">Đã trả</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function openAddModal() {
+        let modal = new bootstrap.Modal(document.getElementById('addContractModal'));
+        modal.show();
     }
 
+    function editContract(id, roomId, name, customerId, startDate, endDate, deposit, status) {
+
+        document.getElementById("contractId").value = id;
+        document.getElementById("roomId").value = roomId;
+        document.getElementById("name").value = name;
+        document.getElementById("customerId").value = customerId;
+        document.getElementById("startDate").value = startDate;
+        document.getElementById("endDate").value = endDate;
+        document.getElementById("deposit").value = deposit;
+        document.getElementById("status").value = status;
+
+        let modal = new bootstrap.Modal(document.getElementById('contractModal'));
+        modal.show();
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
     function closeContractModal() {
-      document.getElementById('contractModal').classList.remove('show');
+        document.getElementById("contractModal").classList.remove("show");
     }
 
     function resetFilters() {
-      document.getElementById('statusFilter').value = '';
-      document.getElementById('roomFilter').value = '';
+        document.getElementById('statusFilter').value = '';
+        document.getElementById('roomFilter').value = '';
     }
 
-    document.getElementById('contractModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeContractModal();
-      }
+    function toggleProfileMenu() {
+        const menu = document.getElementById('profileMenu');
+        menu.classList.toggle('show');
+    }
+
+    function logout() {
+        window.location.href = 'login.jsp';
+    }
+
+    document.addEventListener('click', function (event) {
+        const menu = document.getElementById('profileMenu');
+        const btn = document.querySelector('.profile-btn');
+        if (menu && btn && !menu.contains(event.target) && !btn.contains(event.target)) {
+            menu.classList.remove('show');
+        }
     });
-  </script>
+
+    document.getElementById('contractModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closeContractModal();
+        }
+    });
+
+    function confirmDelete() {
+        return confirm("Bạn có chắc chắn muốn xoá hợp đồng này không?");
+    }
+</script>
 </body>
 </html>

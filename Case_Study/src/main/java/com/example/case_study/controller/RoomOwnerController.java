@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet(name = "RoomController", value = {"/owner/rooms", "/owner/phong"})
+@WebServlet(name = "RoomOwnerController", value = {"/owner/rooms", "/owner/phong"})
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024,  // 1MB
         maxFileSize = 5 * 1024 * 1024,    // 5MB
