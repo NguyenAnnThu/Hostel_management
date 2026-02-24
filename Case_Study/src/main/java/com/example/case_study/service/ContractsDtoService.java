@@ -31,4 +31,7 @@ public class ContractsDtoService implements IContractDtoService {
     public boolean deleteContract(int id) {
         return contractsRepo.deleteContract(id);
     }
+    public List<ContractDTO> filterContracts(String status, String roomId) {
+        return contractsRepo.filterContracts(status, roomId);
+    }
 }

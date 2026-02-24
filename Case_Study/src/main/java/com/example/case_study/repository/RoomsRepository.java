@@ -52,6 +52,16 @@ public class RoomsRepository implements IRoomsRepository {
         return roomsList;
     }
 
+
+    public boolean updateRoomStatus(Connection conn, String roomId, String status) throws SQLException {
+        String sql = "UPDATE rooms SET status=?, updated_at=NOW() WHERE room_id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, roomId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
     @Override
     public boolean updateRoomStatus(String roomId, String status) {
         try (Connection conn = ConnectDB.getConnectDB();
@@ -149,7 +159,7 @@ public class RoomsRepository implements IRoomsRepository {
             ps.setString(1, roomId);
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 return new Rooms(
                         rs.getString("room_id"),
                         rs.getInt("floor"),
