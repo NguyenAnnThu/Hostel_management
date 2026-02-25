@@ -241,151 +241,308 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <div class="modal-overlay" id="createInvoiceModal">
-    <div class="modal-content" style="max-width: 700px;">
-        <form method="post" action="${pageContext.request.contextPath}/invoices">
+    <div class="modal-content" style="max-width: 750px; max-height: 90vh; overflow-y: auto;">
+        <form method="post" action="${pageContext.request.contextPath}/invoices" id="createForm">
+
             <div class="modal-header">
-                <h5>Tạo hóa đơn</h5>
-                <button type="button" class="modal-close-btn"
-                        onclick="closeCreateModal()">×
-                </button>
+                <h5>Tạo hóa đơn mới</h5>
+                <button type="button" class="modal-close-btn" onclick="closeCreateModal()">×</button>
             </div>
 
             <div class="modal-body">
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label">Phòng</label>
-                        <input name="roomId" class="form-control" required>
-                    </div>
+                <%-- Hiển thị lỗi nếu có --%>
+                <c:if test="${not empty errorMsg}">
+                    <div class="alert alert-danger mb-3">${errorMsg}</div>
+                </c:if>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Người thuê</label>
-                        <input name="customerId" class="form-control" required>
+                <%-- Chọn hợp đồng: khi chọn sẽ tự điền roomId, customerId --%>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Hợp đồng <span class="text-danger">*</span></label>
+                        <select id="contractSelect" class="form-control"
+                                onchange="fillContractInfo(this)" required>
+                            <option value="">-- Chọn hợp đồng (phòng - khách thuê) --</option>
+                            <c:forEach items="${activeContracts}" var="c">
+                                <option value="${c.contractId}"
+                                        data-room="${c.roomId}"
+                                        data-customer="${c.customerId}">
+                                    HĐ#${c.contractId} | Phòng ${c.roomId} | ${c.customerName} (${c.customerId})
+                                </option>
+                            </c:forEach>
+                        </select>
                     </div>
                 </div>
 
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <label class="form-label">Tháng</label>
-                        <input type="number" name="month" min="1" max="12"
-                               class="form-control" required>
-                    </div>
+                <%-- Hidden fields được điền tự động --%>
+                <input type="hidden" name="contractId" id="contractId">
+                <input type="hidden" name="roomId"     id="roomId">
+                <input type="hidden" name="customerId" id="customerId">
 
-                    <div class="col-md-6">
-                        <label class="form-label">Năm</label>
-                        <input type="number" name="year" value="2025"
+                <%-- Thông tin đã chọn (readonly, chỉ để hiển thị) --%>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label class="form-label">Phòng</label>
+                        <input type="text" class="form-control" id="displayRoom"
+                               placeholder="(tự điền)" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Mã khách thuê</label>
+                        <input type="text" class="form-control" id="displayCustomer"
+                               placeholder="(tự điền)" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Tháng <span class="text-danger">*</span></label>
+                        <input type="number" name="month" id="inputMonth"
+                               min="1" max="12" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Năm <span class="text-danger">*</span></label>
+                        <input type="number" name="year" id="inputYear"
                                class="form-control" required>
                     </div>
                 </div>
 
                 <hr>
 
-                <h6>Dịch vụ</h6>
-
-                <!-- 1 dòng dịch vụ -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <input name="serviceCode" class="form-control"
-                               placeholder="Mã DV" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input name="quantity" type="number"
-                               class="form-control" placeholder="Số lượng" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input name="unitPrice" type="number"
-                               class="form-control" placeholder="Đơn giá" required>
-                    </div>
+                <%-- Bảng dịch vụ động --%>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Chi tiết dịch vụ</h6>
+                    <button type="button" class="btn btn-sm btn-outline-primary"
+                            onclick="addServiceRow()">
+                        <i class="bi bi-plus-circle"></i> Thêm dịch vụ
+                    </button>
                 </div>
 
-            </div>
+                <table class="table table-bordered table-sm" id="serviceTable">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Mã dịch vụ</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá (VND)</th>
+                        <th>Thành tiền</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="serviceBody">
+                    <%-- dòng mặc định đầu tiên --%>
+                    <tr>
+                        <td>
+                            <select name="serviceCode" class="form-control form-control-sm"
+                                    onchange="onServiceChange(this)">
+                                <option value="">-- Chọn --</option>
+                                <option value="ELEC"    data-price="3500">Điện (ELEC)</option>
+                                <option value="WATER"   data-price="15000">Nước (WATER)</option>
+                                <option value="GARBAGE" data-price="30000">Rác (GARBAGE)</option>
+                                <option value="WIFI"    data-price="100000">Internet (WIFI)</option>
+                                <option value="MANAGE"  data-price="50000">Quản lý (MANAGE)</option>
+                            </select>
+                        </td>
+                        <td><input name="quantity"  type="number" min="1" value="1"
+                                   class="form-control form-control-sm qty"
+                                   oninput="updateTotal(this)"></td>
+                        <td><input name="unitPrice" type="number" min="0" value="0"
+                                   class="form-control form-control-sm price"
+                                   oninput="updateTotal(this)"></td>
+                        <td class="text-end subtotal align-middle">0 đ</td>
+                        <td class="text-center align-middle">
+                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                    onclick="removeRow(this)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr class="table-secondary fw-bold">
+                        <td colspan="3" class="text-end">Tổng cộng:</td>
+                        <td class="text-end" id="grandTotal">0 đ</td>
+                        <td></td>
+                    </tr>
+                    </tfoot>
+                </table>
+
+            </div><%-- end modal-body --%>
 
             <div class="modal-footer">
-                <button type="button"
-                        class="btn-custom btn-secondary"
-                        onclick="closeCreateModal()">Hủy
-                </button>
-                <button type="submit"
-                        class="btn-custom btn-primary-custom">Tạo hóa đơn
+                <button type="button" class="btn-custom btn-secondary"
+                        onclick="closeCreateModal()">Hủy</button>
+                <button type="submit" class="btn-custom btn-primary-custom"
+                        onclick="return validateCreateForm()">
+                    <i class="bi bi-save"></i> Tạo hóa đơn
                 </button>
             </div>
+
         </form>
     </div>
 </div>
 <script>
+    // ===================== MODAL HELPERS =====================
     function openCreateModal() {
-        document.getElementById('modalTitle').innerText = 'Tạo hóa đơn';
-        form.reset();
-        document.getElementById('invoicesCode').value = '';
-        modal.show();
+        document.getElementById('createInvoiceModal').classList.add('show');
+    }
+    function closeCreateModal() {
+        document.getElementById('createInvoiceModal').classList.remove('show');
+        document.getElementById('createForm').reset();
+        resetServiceTable();
+        recalcGrandTotal();
     }
 
-    // Set today's date
+    // Tự mở modal lại nếu có lỗi từ server
+    <c:if test="${openModal}">
+    document.addEventListener('DOMContentLoaded', () => openCreateModal());
+    </c:if>
+
+    // ===================== CONTRACT DROPDOWN =====================
+    function fillContractInfo(sel) {
+        const opt = sel.options[sel.selectedIndex];
+        document.getElementById('contractId').value      = opt.value;
+        document.getElementById('roomId').value          = opt.dataset.room     || '';
+        document.getElementById('customerId').value      = opt.dataset.customer || '';
+        document.getElementById('displayRoom').value     = opt.dataset.room     || '';
+        document.getElementById('displayCustomer').value = opt.dataset.customer || '';
+    }
+
+    // ===================== SERVICE TABLE =====================
+    function serviceRowHtml() {
+        return `<tr>
+        <td>
+            <select name="serviceCode" class="form-control form-control-sm"
+                    onchange="onServiceChange(this)">
+                <option value="">-- Chọn --</option>
+                <option value="ELEC"    data-price="3500">Điện (ELEC)</option>
+                <option value="WATER"   data-price="15000">Nước (WATER)</option>
+                <option value="GARBAGE" data-price="30000">Rác (GARBAGE)</option>
+                <option value="WIFI"    data-price="100000">Internet (WIFI)</option>
+                <option value="MANAGE"  data-price="50000">Quản lý (MANAGE)</option>
+            </select>
+        </td>
+        <td><input name="quantity"  type="number" min="1" value="1"
+                   class="form-control form-control-sm qty"
+                   oninput="updateTotal(this)"></td>
+        <td><input name="unitPrice" type="number" min="0" value="0"
+                   class="form-control form-control-sm price"
+                   oninput="updateTotal(this)"></td>
+        <td class="text-end subtotal align-middle">0 đ</td>
+        <td class="text-center align-middle">
+            <button type="button" class="btn btn-sm btn-outline-danger"
+                    onclick="removeRow(this)">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    </tr>`;
+    }
+
+    function addServiceRow() {
+        document.getElementById('serviceBody').insertAdjacentHTML('beforeend', serviceRowHtml());
+    }
+
+    function removeRow(btn) {
+        const rows = document.querySelectorAll('#serviceBody tr');
+        if (rows.length <= 1) { alert('Phải có ít nhất 1 dịch vụ!'); return; }
+        btn.closest('tr').remove();
+        recalcGrandTotal();
+    }
+
+    function resetServiceTable() {
+        const tbody = document.getElementById('serviceBody');
+        tbody.innerHTML = '';
+        tbody.insertAdjacentHTML('beforeend', serviceRowHtml());
+    }
+
+    // Khi chọn dịch vụ → tự điền đơn giá mặc định
+    function onServiceChange(sel) {
+        const opt   = sel.options[sel.selectedIndex];
+        const price = opt.dataset.price || 0;
+        const row   = sel.closest('tr');
+        row.querySelector('.price').value = price;
+        updateTotal(sel);
+    }
+
+    // Tính thành tiền 1 dòng và cập nhật tổng
+    function updateTotal(el) {
+        const row   = el.closest('tr');
+        const qty   = parseFloat(row.querySelector('.qty').value)   || 0;
+        const price = parseFloat(row.querySelector('.price').value) || 0;
+        row.querySelector('.subtotal').textContent = formatVnd(qty * price);
+        recalcGrandTotal();
+    }
+
+    function recalcGrandTotal() {
+        let total = 0;
+        document.querySelectorAll('#serviceBody .subtotal').forEach(cell => {
+            total += parseVnd(cell.textContent);
+        });
+        document.getElementById('grandTotal').textContent = formatVnd(total);
+    }
+
+    function formatVnd(n) {
+        return n.toLocaleString('vi-VN') + ' đ';
+    }
+    function parseVnd(s) {
+        return parseFloat(s.replace(/[^\d]/g, '')) || 0;
+    }
+
+    // ===================== VALIDATE TRƯỚC KHI SUBMIT =====================
+    function validateCreateForm() {
+        if (!document.getElementById('contractId').value) {
+            alert('Vui lòng chọn hợp đồng!'); return false;
+        }
+        const rows = document.querySelectorAll('#serviceBody tr');
+        for (const row of rows) {
+            const code = row.querySelector('select[name="serviceCode"]').value;
+            if (!code) { alert('Vui lòng chọn dịch vụ cho tất cả các dòng!'); return false; }
+        }
+        return true;
+    }
+
+    // ===================== PAYMENT MODAL =====================
     document.getElementById('confirmDate').valueAsDate = new Date();
 
     function markAsPaid(invoiceCode) {
         document.getElementById('invoiceCode').value = invoiceCode;
         document.getElementById('paymentModal').classList.add('show');
     }
-
     function closePaymentModal() {
         document.getElementById('paymentModal').classList.remove('show');
     }
-
     function confirmPayment() {
         alert('Hóa đơn đã được đánh dấu "Đã thu" thành công!');
         closePaymentModal();
         location.reload();
     }
 
-    function viewPaymentInfo() {
-        document.getElementById('infoModal').classList.add('show');
-    }
+    // ===================== INFO MODAL =====================
+    function viewPaymentInfo() { document.getElementById('infoModal').classList.add('show'); }
+    function closeInfoModal()  { document.getElementById('infoModal').classList.remove('show'); }
 
-    function closeInfoModal() {
-        document.getElementById('infoModal').classList.remove('show');
-    }
-
+    // ===================== FILTER =====================
     function resetFilters() {
-        window.location.href = "${pageContext.request.contextPath}/invoices"
+        window.location.href = "${pageContext.request.contextPath}/invoices";
     }
 
+    // Đóng modal khi click ra ngoài
+    ['paymentModal','infoModal','createInvoiceModal'].forEach(id => {
+        document.getElementById(id).addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('show');
+        });
+    });
+
+    // Profile dropdown
     function toggleProfileMenu() {
-        const menu = document.getElementById('profileMenu');
-        menu.classList.toggle('show');
+        document.getElementById('profileMenu').classList.toggle('show');
     }
-
-    function logout() {
-        window.location.href = 'login.jsp';
-    }
-
-    document.addEventListener('click', function (event) {
+    document.addEventListener('click', function(e) {
         const menu = document.getElementById('profileMenu');
-        const btn = document.querySelector('.profile-btn');
-        if (menu && btn && !menu.contains(event.target) && !btn.contains(event.target)) {
+        const btn  = document.querySelector('.profile-btn');
+        if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
             menu.classList.remove('show');
         }
     });
 
-    document.getElementById('paymentModal').addEventListener('click', function (e) {
-        if (e.target === this) {
-            closePaymentModal();
-        }
-    });
-
-    document.getElementById('infoModal').addEventListener('click', function (e) {
-        if (e.target === this) {
-            closeInfoModal();
-        }
-    });
-
-    function openCreateModal() {
-        document.getElementById('createInvoiceModal').classList.add('show');
-    }
-
-    function closeCreateModal() {
-        document.getElementById('createInvoiceModal').classList.remove('show');
-    }
+    // Set năm mặc định = năm hiện tại
+    document.getElementById('inputYear').value = new Date().getFullYear();
+    document.getElementById('inputMonth').value = new Date().getMonth() + 1;
 </script>
 </body>
 </html>

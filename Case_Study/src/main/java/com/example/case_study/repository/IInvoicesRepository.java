@@ -1,5 +1,6 @@
 package com.example.case_study.repository;
 
+import com.example.case_study.dto.ContractOption;
 import com.example.case_study.entity.Invoices;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface IInvoicesRepository {
     Invoices findById(int invoiceId);
     List<String> getAllStatus();
     List<String> getAllRoomId();
+    List<ContractOption> getActiveContracts();
 }

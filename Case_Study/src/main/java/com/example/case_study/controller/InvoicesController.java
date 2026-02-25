@@ -44,6 +44,7 @@ public class InvoicesController extends HttpServlet {
         req.setAttribute("invoices", invoiceService.getAll());
         req.setAttribute("statusList", invoiceService.getAllStatus());
         req.setAttribute("roomIdList", invoiceService.getAllRoomId());
+        req.setAttribute("activeContracts",  invoiceService.getActiveContracts());
         req.getRequestDispatcher("/view/owner/invoices.jsp").forward(req, resp);
     }
 
@@ -66,6 +67,7 @@ public class InvoicesController extends HttpServlet {
             req.setAttribute("invoices", invoiceService.filter(month, year, searchStatus, searchRoomId, searchInvoiceId));
             req.setAttribute("statusList", invoiceService.getAllStatus());
             req.setAttribute("roomIdList", invoiceService.getAllRoomId());
+            req.setAttribute("activeContracts",  invoiceService.getActiveContracts());
 
             req.setAttribute("currentMonth", searchMonth);
             req.setAttribute("selectedStatus", searchStatus);
@@ -81,32 +83,50 @@ public class InvoicesController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws IOException, ServletException {
 
-        Invoices invoice = new Invoices();
-        invoice.setRoomId(req.getParameter("roomId"));
-        invoice.setCustomerId(req.getParameter("customerId"));
-        invoice.setMonth(Integer.parseInt(req.getParameter("month")));
-        invoice.setYear(Integer.parseInt(req.getParameter("year")));
-        invoice.setStatus("UNPAID");
+        try {
+            Invoices invoice = new Invoices();
+            invoice.setContractId(Integer.parseInt(req.getParameter("contractId")));
+            invoice.setRoomId(req.getParameter("roomId"));
+            invoice.setCustomerId(req.getParameter("customerId"));
+            invoice.setMonth(Integer.parseInt(req.getParameter("month")));
+            invoice.setYear(Integer.parseInt(req.getParameter("year")));
+            invoice.setStatus("UNPAID");
 
-        List<InvoiceDetails> details = new ArrayList<>();
+            List<InvoiceDetails> details = new ArrayList<>();
 
-        String[] serviceCodes = req.getParameterValues("serviceCode");
-        String[] quantities = req.getParameterValues("quantity");
-        String[] prices = req.getParameterValues("unitPrice");
+            String[] serviceCodes = req.getParameterValues("serviceCode");
+            String[] quantities = req.getParameterValues("quantity");
+            String[] prices = req.getParameterValues("unitPrice");
 
-        for (int i = 0; i < serviceCodes.length; i++) {
-            details.add(new InvoiceDetails(
-                    0,
-                    0,
-                    serviceCodes[i],
-                    Integer.parseInt(quantities[i]),
-                    Double.parseDouble(prices[i])
-            ));
+            if (serviceCodes == null || serviceCodes.length == 0) {
+                throw new IllegalArgumentException("Phải có ít nhất 1 dịch vụ");
+            }
+
+            for (int i = 0; i < serviceCodes.length; i++) {
+                if (serviceCodes[i] == null || serviceCodes[i].isBlank()) continue;
+                details.add(new InvoiceDetails(
+                        0,
+                        0,
+                        serviceCodes[i],
+                        Integer.parseInt(quantities[i]),
+                        Double.parseDouble(prices[i])
+                ));
+            }
+
+            invoiceService.createInvoice(invoice, details);
+            resp.sendRedirect(req.getContextPath() + "/invoices");
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("errorMsg", "Tạo hóa đơn thất bại: " + e.getMessage());
+            req.setAttribute("invoices", invoiceService.getAll());
+            req.setAttribute("statusList", invoiceService.getAllStatus());
+            req.setAttribute("roomIdList", invoiceService.getAllRoomId());
+            req.setAttribute("activeContracts",  invoiceService.getActiveContracts());
+            req.setAttribute("openModal", true);
+            req.getRequestDispatcher("/view/owner/invoices.jsp").forward(req, resp);
         }
 
-        invoiceService.createInvoice(invoice, details);
-        resp.sendRedirect(req.getContextPath() + "/invoices");
     }
 }

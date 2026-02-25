@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Invoices {
     private int invoiceId;
+    private int contractId;
     private String roomId;
     private String customerId;
     private int month;
@@ -15,8 +16,9 @@ public class Invoices {
     public Invoices() {
     }
 
-    public Invoices(int invoiceId, String roomId, String customerId, int month, int year, String qrCode, String status, Date createdAt) {
+    public Invoices(int invoiceId, int contractId, String roomId, String customerId, int month, int year, String qrCode, String status, Date createdAt) {
         this.invoiceId = invoiceId;
+        this.contractId = contractId;
         this.roomId = roomId;
         this.customerId = customerId;
         this.month = month;
@@ -32,6 +34,14 @@ public class Invoices {
 
     public void setInvoiceId(int invoiceId) {
         this.invoiceId = invoiceId;
+    }
+
+    public int getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(int contractId) {
+        this.contractId = contractId;
     }
 
     public String getRoomId() {
