@@ -1,5 +1,6 @@
 package com.example.case_study.service;
 
+import com.example.case_study.dto.ContractOption;
 import com.example.case_study.entity.InvoiceDetails;
 import com.example.case_study.entity.Invoices;
 import com.example.case_study.repository.IInvoiceDetailsRepository;
@@ -44,5 +45,10 @@ public class InvoicesService implements IInvoicesService {
     @Override
     public List<Invoices> filter(Integer month, Integer year, String status, String roomId, String invoiceId) {
         return invoicesRepo.filter(month, year, status, roomId, invoiceId);
+    }
+
+    @Override
+    public List<ContractOption> getActiveContracts() {
+        return invoicesRepo.getActiveContracts();
     }
 }

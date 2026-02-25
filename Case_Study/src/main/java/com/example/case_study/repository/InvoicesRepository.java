@@ -1,6 +1,7 @@
 package com.example.case_study.repository;
 
 import com.example.case_study.common.DBConnection;
+import com.example.case_study.dto.ContractOption;
 import com.example.case_study.entity.Invoices;
 
 import java.sql.*;
@@ -14,9 +15,14 @@ public class InvoicesRepository implements IInvoicesRepository {
     private static final String GET_ALL_ROOM_ID = "select distinct room_id from invoices order by room_id";
     private static final String FILTER_INVOICES = "select * from invoices where 1=1";
     private static final String INSERT_SQL =
-            "INSERT INTO invoices(room_id, customer_id, month, year, qr_code, status, created_at) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, NOW())";
-
+            "INSERT INTO invoices(contract_id, room_id, customer_id, month, year, qr_code, status, created_at) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
+    private static final String GET_ACTIVE_CONTRACTS =
+            "SELECT c.contract_id, c.room_id, c.customer_id, u.full_name " +
+                    "FROM contracts c " +
+                    "JOIN users u ON u.user_id = c.customer_id " +
+                    "WHERE c.status = 'active' " +
+                    "ORDER BY c.room_id";
     private static final String SELECT_ALL =
             "SELECT * FROM invoices ORDER BY created_at DESC";
 
@@ -26,12 +32,13 @@ public class InvoicesRepository implements IInvoicesRepository {
              PreparedStatement ps =
                      conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
-            ps.setString(1, invoice.getRoomId());
-            ps.setString(2, invoice.getCustomerId());
-            ps.setInt(3, invoice.getMonth());
-            ps.setInt(4, invoice.getYear());
-            ps.setString(5, invoice.getQrCode());
-            ps.setString(6, invoice.getStatus());
+            ps.setInt(1, invoice.getContractId());
+            ps.setString(2, invoice.getRoomId());
+            ps.setString(3, invoice.getCustomerId());
+            ps.setInt(4, invoice.getMonth());
+            ps.setInt(5, invoice.getYear());
+            ps.setString(6, invoice.getQrCode());
+            ps.setString(7, invoice.getStatus());
 
             ps.executeUpdate();
 
@@ -55,6 +62,7 @@ public class InvoicesRepository implements IInvoicesRepository {
             while (rs.next()) {
                 list.add(new Invoices(
                         rs.getInt("invoice_id"),
+                        rs.getInt("contract_id"),
                         rs.getString("room_id"),
                         rs.getString("customer_id"),
                         rs.getInt("month"),
@@ -117,6 +125,7 @@ public class InvoicesRepository implements IInvoicesRepository {
             while (resultSet.next()) {
                 list.add(new Invoices(
                         resultSet.getInt("invoice_id"),
+                        resultSet.getInt("contract_id"),
                         resultSet.getString("room_id"),
                         resultSet.getString("customer_id"),
                         resultSet.getInt("month"),
@@ -192,5 +201,25 @@ public class InvoicesRepository implements IInvoicesRepository {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public List<ContractOption> getActiveContracts() {
+        List<ContractOption> list = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(GET_ACTIVE_CONTRACTS);) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new ContractOption(
+                        rs.getInt   ("contract_id"),
+                        rs.getString("room_id"),
+                        rs.getString("customer_id"),
+                        rs.getString("full_name")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }
