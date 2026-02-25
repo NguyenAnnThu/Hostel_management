@@ -7,7 +7,7 @@ public class DBConnection {
     private static final String URL =
             "jdbc:mysql://localhost:3306/cs_property_management";
     private static final String USER = "root";
-    private static final String PASS = "123456";
+    private static final String PASS = "19052005";
 
     public static Connection getConnection() {
         try {

@@ -23,7 +23,7 @@ public class RoomsRepository implements IRoomsRepository {
             "on rt.user_id = u.user_id " +
             "where 1 = 1 " +
             "order by r.floor, r.room_id";
-
+    private static final String UPDATE_ROOM_STATUS = "UPDATE rooms SET status=? WHERE room_id=?";
     private static final String GET_ALL_ROOMS_USER = "select * from rooms";
     private List<Rooms> roomsList = new ArrayList<>();
 
@@ -50,6 +50,32 @@ public class RoomsRepository implements IRoomsRepository {
             throw new RuntimeException("Lỗi lấy danh sách phòng", e);
         }
         return roomsList;
+    }
+
+
+    public boolean updateRoomStatus(Connection conn, String roomId, String status) throws SQLException {
+        String sql = "UPDATE rooms SET status=?, updated_at=NOW() WHERE room_id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, roomId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    @Override
+    public boolean updateRoomStatus(String roomId, String status) {
+        try (Connection conn = ConnectDB.getConnectDB();
+             PreparedStatement ps = conn.prepareStatement(UPDATE_ROOM_STATUS)) {
+
+            ps.setString(1, status);
+            ps.setString(2, roomId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     // lấy toàn bộ phòng hiển thị cho user
@@ -133,7 +159,7 @@ public class RoomsRepository implements IRoomsRepository {
             ps.setString(1, roomId);
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 return new Rooms(
                         rs.getString("room_id"),
                         rs.getInt("floor"),

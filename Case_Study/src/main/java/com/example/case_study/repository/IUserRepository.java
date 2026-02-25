@@ -1,23 +1,22 @@
 package com.example.case_study.repository;
 
 import com.example.case_study.entity.User;
+import dto.UserDto;
 
 import java.util.List;
 
 public interface IUserRepository {
-    List<User> getAll();
+    List<UserDto> getAll();
 
-    boolean add(User user);
+    boolean add(UserDto user);
 
-    boolean update(User user);
+    boolean update(UserDto user);
+
+    boolean updateStatus(String userId, String status);
 
     boolean delete(String userId);
 
-    User findById(String userId);
+    UserDto findById(String userId);
 
-    List<User> findByName(String name);
-
-    User findByPhone(String phone);
-
-    List<User> findByStatus(String status);
+    List<UserDto> filter(String status, String keyword);
 }

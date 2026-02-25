@@ -3,6 +3,7 @@ package com.example.case_study.service;
 import com.example.case_study.entity.User;
 import com.example.case_study.repository.IUserRepository;
 import com.example.case_study.repository.UserRepository;
+import dto.UserDto;
 
 import java.util.List;
 
@@ -15,17 +16,17 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<UserDto> getAll() {
         return userRepository.getAll();
     }
 
     @Override
-    public boolean add(User user) {
+    public boolean add(UserDto user) {
         return userRepository.add(user);
     }
 
     @Override
-    public boolean update(User user) {
+    public boolean update(UserDto user) {
         return userRepository.update(user);
     }
 
@@ -35,22 +36,16 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findById(String userId) {
+    public UserDto findById(String userId) {
         return userRepository.findById(userId);
     }
 
     @Override
-    public List<User> findByName(String name) {
-        return userRepository.findByName(name);
+    public boolean updateStatus(String userId, String status) {
+        return userRepository.updateStatus(userId, status);
     }
-
     @Override
-    public User findByPhone(String phone) {
-        return userRepository.findByPhone(phone);
-    }
-
-    @Override
-    public List<User> findByStatus(String status) {
-        return userRepository.findByStatus(status);
+    public List<UserDto> filter(String status, String keyword) {
+        return userRepository.filter(status, keyword);
     }
 }

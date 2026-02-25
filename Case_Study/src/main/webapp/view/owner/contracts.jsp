@@ -33,33 +33,50 @@
         </div>
 
         <!-- Filters -->
-        <div class="filter-section">
-            <div class="filter-group">
-                <label>Trạng thái</label>
-                <select id="statusFilter" class="form-control">
-                    <option value="">-- Chọn trạng thái --</option>
-                    <option value="hiệu lực">Đã đặt</option>
-                    <option value="kết thúc">Đã trả</option>
-                </select>
+        <form method="get" action="${pageContext.request.contextPath}/contract">
+            <input type="hidden" name="action" value="filter">
+
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label>Trạng thái</label>
+                    <select name="status" class="form-control">
+                        <option value="">-- Chọn trạng thái --</option>
+                        <option value="Đã trả"
+                                <c:if test="${param.status == 'Đã trả'}">selected</c:if>>
+                            Đã trả
+                        </option>
+                        <option value="Chưa trả"
+                                <c:if test="${param.status == 'Chưa trả'}">selected</c:if>>
+                            Chưa trả
+                        </option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Phòng</label>
+                    <select name="roomId" class="form-control">
+                        <option value="">-- Chọn phòng --</option>
+                        <c:forEach var="room" items="${roomList}">
+                            <option value="${room.roomId}"
+                                    <c:if test="${param.roomId == room.roomId}">selected</c:if>>
+                                    ${room.roomId}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn-custom btn-primary-custom">
+                        <i class="bi bi-funnel"></i> Lọc
+                    </button>
+
+                    <a href="${pageContext.request.contextPath}/contract"
+                       class="btn-custom btn-outline">
+                        Đặt lại
+                    </a>
+                </div>
             </div>
-            <div class="filter-group">
-                <label>Phòng</label>
-                <select id="roomFilter" class="form-control" name="action" value="roomList">
-                    <option value="">-- Chọn phòng --</option>
-                    <c:forEach var="room" items="${roomList}">
-                        <option>${room.roomId}</option>
-                    </c:forEach>
-                </select>
-            </div>
-            <div class="filter-actions">
-                <button class="btn-custom btn-primary-custom">
-                    <i class="bi bi-funnel"></i> Lọc
-                </button>
-                <button class="btn-custom btn-outline" onclick="resetFilters()">
-                    <i class="bi bi-arrow-clockwise"></i> Đặt lại
-                </button>
-            </div>
-        </div>
+        </form>
 
         <!-- Table -->
         <div class="card-custom">
@@ -86,7 +103,14 @@
                             <td>${c.startDate}</td>
                             <td>${c.endDate}</td>
                             <td>${c.deposit} VND</td>
-                            <td><span class="badge-custom badge-success">${c.status}</span></td>
+                            <td>
+                                <c:if test="${c.status == 'Đã trả'}">
+                                    <span class="badge-custom badge-success">${c.status}</span>
+                                </c:if>
+                                <c:if test="${c.status == 'Chưa trả'}">
+                                    <span class="badge-custom badge-danger">${c.status}</span>
+                                </c:if>
+                            </td>
                             <td>
                                 <div class="action-buttons">
                                     <form method="post"
@@ -144,9 +168,10 @@
                         <label>Phòng</label>
                         <select name="roomId" class="form-control" required>
                             <c:forEach var="room" items="${roomList}">
-                                <option value="${room.roomId}">
-                                        ${room.roomId}
-                                </option>
+                                <c:if test="${room.status == 'available'}">
+                                    <option>${room.roomId}</option>
+                                </c:if>
+
                             </c:forEach>
                         </select>
                     </div>
@@ -174,8 +199,8 @@
                     <div class="mb-3">
                         <label>Trạng thái</label>
                         <select name="status" class="form-control">
-                            <option value="Đã đặt">Đã đặt</option>
-                            <option value="Đã trả">Đã trả</option>
+                            <option selected value="Đã trả">Đã trả</option>
+                            <option value="Chưa trả">Chưa trả</option>
                         </select>
                     </div>
 
@@ -235,8 +260,8 @@
                     <div class="mb-3">
                         <label>Trạng thái</label>
                         <select id="status" name="status" class="form-control">
-                            <option value="Đã đặt">Đã đặt</option>
                             <option value="Đã trả">Đã trả</option>
+                            <option value="Chưa">Chưa trả</option>
                         </select>
                     </div>
 
@@ -279,11 +304,6 @@
 <script>
     function closeContractModal() {
         document.getElementById("contractModal").classList.remove("show");
-    }
-
-    function resetFilters() {
-        document.getElementById('statusFilter').value = '';
-        document.getElementById('roomFilter').value = '';
     }
 
     function toggleProfileMenu() {
