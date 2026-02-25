@@ -10,20 +10,73 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.awt.*;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-@WebServlet(name="InvoicesController", value="/invoices")
+@WebServlet(name = "InvoicesController", value = "/invoices")
 public class InvoicesController extends HttpServlet {
     private final IInvoicesService invoiceService = new InvoicesService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        String action = req.getParameter("action");
+        if (action == null) {
+            action = "";
+        }
 
+        switch (action) {
+            case "filter":
+                filterInvoices(req, resp);
+                break;
+            default:
+                showListInvoices(req, resp);
+                break;
+        }
+    }
+
+    private void showListInvoices(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("invoices", invoiceService.getAll());
+        req.setAttribute("statusList", invoiceService.getAllStatus());
+        req.setAttribute("roomIdList", invoiceService.getAllRoomId());
         req.getRequestDispatcher("/view/owner/invoices.jsp").forward(req, resp);
+    }
+
+    private void filterInvoices(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String searchMonth = req.getParameter("searchMonth");
+        String searchStatus = req.getParameter("searchStatus");
+        String searchRoomId = req.getParameter("searchRoomId");
+        String searchInvoiceId = req.getParameter("searchInvoiceId");
+
+        Integer month = null;
+        Integer year = null;
+
+        try {
+            if (searchMonth != null && !searchMonth.isEmpty()) {
+                String[] monthYear = searchMonth.split("-");
+                year = Integer.parseInt(monthYear[0]);
+                month = Integer.parseInt(monthYear[1]);
+            }
+
+            req.setAttribute("invoices", invoiceService.filter(month, year, searchStatus, searchRoomId, searchInvoiceId));
+            req.setAttribute("statusList", invoiceService.getAllStatus());
+            req.setAttribute("roomIdList", invoiceService.getAllRoomId());
+
+            req.setAttribute("currentMonth", searchMonth);
+            req.setAttribute("selectedStatus", searchStatus);
+            req.setAttribute("selectedRoomId", searchRoomId);
+            req.setAttribute("selectedInvoiceId", searchInvoiceId);
+
+            req.getRequestDispatcher("/view/owner/invoices.jsp").forward(req, resp);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath()+"/invoices");
+        }
     }
 
     @Override

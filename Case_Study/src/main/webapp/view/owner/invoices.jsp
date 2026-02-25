@@ -1,370 +1,391 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hóa đơn - Quản Lý Nhà Trọ</title>
-  <c:import url="../layout/library.jsp"></c:import>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  <link rel="stylesheet"
-        href="${pageContext.request.contextPath}/view/owner/assets/styles.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <style>
-    .add{
-      display:flex;
-      justify-content: space-around;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hóa đơn - Quản Lý Nhà Trọ</title>
+    <c:import url="../layout/library.jsp"></c:import>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/view/owner/assets/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .add {
+            display: flex;
+            justify-content: space-around;
+        }
 
-  </style>
+    </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <c:import url="../layout/sidebar.jsp"></c:import>
+<!-- Sidebar -->
+<c:import url="../layout/sidebar.jsp"></c:import>
 
-  <!-- Main Wrapper -->
-  <div class="main-wrapper">
+<!-- Main Wrapper -->
+<div class="main-wrapper">
     <!-- Top Navbar -->
     <c:import url="../layout/topbar.jsp"></c:import>
 
     <!-- Main Content -->
     <div class="main-content">
-      <div class="breadcrumb-nav">
-        <a href="dashboard.jsp">Trang chủ</a> / <span>Hóa đơn</span>
-      </div>
-
-      <div class="page-header">
-        <h1 class="page-title">Quản lý Hóa đơn</h1>
-      </div>
-
-      <!-- Filters -->
-      <div class="filter-section">
-        <div class="filter-group">
-          <label>Tháng/Năm</label>
-          <input type="month" class="form-control" value="2025-01">
+        <div class="breadcrumb-nav">
+            <a href="dashboard.jsp">Trang chủ</a> / <span>Hóa đơn</span>
         </div>
-        <div class="filter-group">
-          <label>Trạng thái</label>
-          <select id="statusFilter" class="form-control">
-            <option value="">-- Chọn trạng thái --</option>
-            <option value="chưa">Chưa thu</option>
-            <option value="đã">Đã thu</option>
-          </select>
+
+        <div class="page-header">
+            <h1 class="page-title">Quản lý Hóa đơn</h1>
         </div>
-        <div class="filter-group">
-          <label>Phòng</label>
-          <select id="roomFilter" class="form-control">
-            <option value="">-- Chọn phòng --</option>
-            <option value="P101">P101</option>
-            <option value="P102">P102</option>
-            <option value="P201">P201</option>
-            <option value="P205">P205</option>
-            <option value="P301">P301</option>
-          </select>
+
+        <!-- Filters -->
+        <div class="filter-section">
+            <form action="${pageContext.request.contextPath}/invoices" method="get"
+                  style="display: flex; flex-wrap: wrap; gap: inherit; align-items: flex-end; width: 100%">
+                <input type="hidden" name="action" value="filter">
+                <div class="filter-group">
+                    <label>Tháng/Năm</label>
+                    <input type="month" name="searchMonth" class="form-control">
+                </div>
+                <div class="filter-group">
+                    <label>Trạng thái</label>
+                    <select id="statusFilter" class="form-control" name="searchStatus">
+                        <option value="">-- Chọn trạng thái --</option>
+                        <c:forEach items="${statusList}" var="status">
+                            <option value="${status}" ${selectedStatus == status ? 'selected' : ''}>
+                                <c:choose>
+                                    <c:when test="${status == 'paid'}">Đã thu</c:when>
+                                </c:choose>
+
+                                <c:choose>
+                                    <c:when test="${status == 'unpaid'}">Chưa thu</c:when>
+                                </c:choose>
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Phòng</label>
+                    <select id="roomFilter" class="form-control" name="searchRoomId">
+                        <option value="">-- Chọn phòng --</option>
+                        <c:forEach items="${roomIdList}" var="roomId">
+                            <option value="${roomId}" ${selectedRoomId == roomId ? 'selected' : ''}>${roomId}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Mã hóa đơn</label>
+                    <input type="text" class="form-control" id="invoiceSearch" name="searchInvoiceId"
+                           placeholder="Tìm mã HĐ" value="${selectedInvoiceId}">
+                </div>
+                <div class="filter-actions">
+                    <button type="submit" class="btn-custom btn-primary-custom">
+                        <i class="bi bi-funnel"></i> Lọc
+                    </button>
+                    <button type="button" class="btn-custom btn-outline" onclick="resetFilters()">
+                        <i class="bi bi-arrow-clockwise"></i> Đặt lại
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class="filter-group">
-          <label>Mã hóa đơn</label>
-          <input type="text" class="form-control" id="invoiceSearch" placeholder="Tìm mã HĐ">
+
+        <!-- Note -->
+        <div class="page-header d-flex justify-content-between align-items-center mb-3">
+            <p>*Lưu ý khi tạo hóa đơn</p>
+            <button class="btn btn-primary" onclick="openCreateModal()">
+                <i class="bi bi-plus-lg"></i> Tạo hóa đơn
+            </button>
         </div>
-        <div class="filter-actions">
-          <button class="btn-custom btn-primary-custom">
-            <i class="bi bi-funnel"></i> Lọc
-          </button>
-          <button class="btn-custom btn-outline" onclick="resetFilters()">
-            <i class="bi bi-arrow-clockwise"></i> Đặt lại
-          </button>
+
+        <!-- Table -->
+        <div class="card-custom">
+            <div class="table-responsive">
+                <table class="table-custom">
+                    <thead>
+                    <tr>
+                        <th>Mã HĐ</th>
+                        <th>Phòng</th>
+                        <th>Người thuê</th>
+                        <th>Kỳ</th>
+                        <th>Tổng tiền (VND)</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                        <th>Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="inv" items="${invoices}">
+                        <tr>
+                            <td><strong>HĐ${inv.invoiceId}</strong></td>
+                            <td>${inv.roomId}</td>
+                            <td>${inv.customerId}</td>
+                            <td>
+                                <fmt:formatNumber value="${inv.month}" minIntegerDigits="2"/>/${inv.year}
+                            </td>
+                            <td>
+                                <!-- tạm để 0, sau này join detail -->
+                                0
+                            </td>
+
+                            <td>
+                                <c:choose>
+                                    <c:when test="${inv.status == 'PAID'}">
+                                        <span class="badge-custom badge-success">Đã thu</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="badge-custom badge-info">Chưa thu</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+
+                            <td>
+                                <fmt:formatDate value="${inv.createdAt}" pattern="dd/MM/yyyy"/>
+                            </td>
+
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="${pageContext.request.contextPath}/invoice-detail?id=${inv.invoiceId}"
+                                       class="btn-custom btn-primary-custom">Xem</a>
+
+                                    <c:if test="${inv.status != 'PAID'}">
+                                        <button class="btn-custom btn-success"
+                                                onclick="markAsPaid('HĐ${inv.invoiceId}')">
+                                            Đã thu
+                                        </button>
+                                    </c:if>
+                                </div>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-
-      <!-- Note -->
-      <div class="page-header d-flex justify-content-between align-items-center mb-3">
-        <p>*Lưu ý khi tạo hóa đơn</p>
-        <button class="btn btn-primary" onclick="openCreateModal()">
-          <i class="bi bi-plus-lg"></i> Tạo hóa đơn
-        </button>
-      </div>
-
-      <!-- Table -->
-      <div class="card-custom">
-        <div class="table-responsive">
-          <table class="table-custom">
-            <thead>
-              <tr>
-                <th>Mã HĐ</th>
-                <th>Phòng</th>
-                <th>Người thuê</th>
-                <th>Kỳ</th>
-                <th>Tổng tiền (VND)</th>
-                <th>Trạng thái</th>
-                <th>Ngày tạo</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="inv" items="${invoices}">
-              <tr>
-                <td><strong>HĐ${inv.invoiceId}</strong></td>
-                <td>${inv.roomId}</td>
-                <td>${inv.customerId}</td>
-                <td>
-                  <fmt:formatNumber value="${inv.month}" minIntegerDigits="2"/>/${inv.year}
-                </td>
-                <td>
-                  <!-- tạm để 0, sau này join detail -->
-                  0
-                </td>
-
-                <td>
-                  <c:choose>
-                    <c:when test="${inv.status == 'PAID'}">
-                      <span class="badge-custom badge-success">Đã thu</span>
-                    </c:when>
-                    <c:otherwise>
-                      <span class="badge-custom badge-info">Chưa thu</span>
-                    </c:otherwise>
-                  </c:choose>
-                </td>
-
-                <td>
-                  <fmt:formatDate value="${inv.createdAt}" pattern="dd/MM/yyyy"/>
-                </td>
-
-                <td>
-                  <div class="action-buttons">
-                    <a href="${pageContext.request.contextPath}/invoice-detail?id=${inv.invoiceId}"
-                       class="btn-custom btn-primary-custom">Xem</a>
-
-                    <c:if test="${inv.status != 'PAID'}">
-                      <button class="btn-custom btn-success"
-                              onclick="markAsPaid('HĐ${inv.invoiceId}')">
-                        Đã thu
-                      </button>
-                    </c:if>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <!-- Payment Modal -->
-  <div class="modal-overlay" id="paymentModal">
+<!-- Payment Modal -->
+<div class="modal-overlay" id="paymentModal">
     <div class="modal-content" style="max-width: 550px;">
-      <div class="modal-header">
-        <h5 id="paymentTitle">Đánh dấu hóa đơn đã thu</h5>
-        <button class="modal-close-btn" onclick="closePaymentModal()">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">Mã hóa đơn</label>
-          <input type="text" class="form-control" id="invoiceCode" disabled>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Ngày xác nhận</label>
-          <input type="date" class="form-control" id="confirmDate">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Người xác nhận</label>
-          <input type="text" class="form-control" placeholder="Tên người xác nhận">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Ghi chú</label>
-          <textarea class="form-control" rows="3" placeholder="Ghi chú thêm (tuỳ chọn)"></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-custom btn-secondary" onclick="closePaymentModal()">Hủy</button>
-        <button class="btn-custom btn-success" onclick="confirmPayment()">Xác nhận đã thu</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Info Modal -->
-  <div class="modal-overlay" id="infoModal">
-    <div class="modal-content" style="max-width: 550px;">
-      <div class="modal-header">
-        <h5>Thông tin thanh toán</h5>
-        <button class="modal-close-btn" onclick="closeInfoModal()">×</button>
-      </div>
-      <div class="modal-body">
-        <div style="display: grid; gap: 12px;">
-          <div>
-            <div style="font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: 600;">Mã xác nhận</div>
-            <div style="font-size: 14px; color: #2c3e50;">XN20250120001</div>
-          </div>
-          <div>
-            <div style="font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: 600;">Ngày xác nhận</div>
-            <div style="font-size: 14px; color: #2c3e50;">20/01/2025</div>
-          </div>
-          <div>
-            <div style="font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: 600;">Người xác nhận</div>
-            <div style="font-size: 14px; color: #2c3e50;">Chủ trọ</div>
-          </div>
-          <div>
-            <div style="font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: 600;">Ghi chú</div>
-            <div style="font-size: 14px; color: #2c3e50;">Thanh toán bằng tiền mặt</div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-custom btn-secondary" onclick="closeInfoModal()">Đóng</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <div class="modal-overlay" id="createInvoiceModal">
-    <div class="modal-content" style="max-width: 700px;">
-      <form method="post" action="${pageContext.request.contextPath}/invoices">
         <div class="modal-header">
-          <h5>Tạo hóa đơn</h5>
-          <button type="button" class="modal-close-btn"
-                  onclick="closeCreateModal()">×</button>
+            <h5 id="paymentTitle">Đánh dấu hóa đơn đã thu</h5>
+            <button class="modal-close-btn" onclick="closePaymentModal()">×</button>
         </div>
-
         <div class="modal-body">
-
-          <div class="row">
-            <div class="col-md-6">
-              <label class="form-label">Phòng</label>
-              <input name="roomId" class="form-control" required>
+            <div class="form-group">
+                <label class="form-label">Mã hóa đơn</label>
+                <input type="text" class="form-control" id="invoiceCode" disabled>
             </div>
-
-            <div class="col-md-6">
-              <label class="form-label">Người thuê</label>
-              <input name="customerId" class="form-control" required>
+            <div class="form-group">
+                <label class="form-label">Ngày xác nhận</label>
+                <input type="date" class="form-control" id="confirmDate">
             </div>
-          </div>
-
-          <div class="row mt-2">
-            <div class="col-md-6">
-              <label class="form-label">Tháng</label>
-              <input type="number" name="month" min="1" max="12"
-                     class="form-control" required>
+            <div class="form-group">
+                <label class="form-label">Người xác nhận</label>
+                <input type="text" class="form-control" placeholder="Tên người xác nhận">
             </div>
-
-            <div class="col-md-6">
-              <label class="form-label">Năm</label>
-              <input type="number" name="year" value="2025"
-                     class="form-control" required>
+            <div class="form-group">
+                <label class="form-label">Ghi chú</label>
+                <textarea class="form-control" rows="3" placeholder="Ghi chú thêm (tuỳ chọn)"></textarea>
             </div>
-          </div>
-
-          <hr>
-
-          <h6>Dịch vụ</h6>
-
-          <!-- 1 dòng dịch vụ -->
-          <div class="row">
-            <div class="col-md-4">
-              <input name="serviceCode" class="form-control"
-                     placeholder="Mã DV" required>
-            </div>
-            <div class="col-md-4">
-              <input name="quantity" type="number"
-                     class="form-control" placeholder="Số lượng" required>
-            </div>
-            <div class="col-md-4">
-              <input name="unitPrice" type="number"
-                     class="form-control" placeholder="Đơn giá" required>
-            </div>
-          </div>
-
         </div>
-
         <div class="modal-footer">
-          <button type="button"
-                  class="btn-custom btn-secondary"
-                  onclick="closeCreateModal()">Hủy</button>
-          <button type="submit"
-                  class="btn-custom btn-primary-custom">Tạo hóa đơn</button>
+            <button class="btn-custom btn-secondary" onclick="closePaymentModal()">Hủy</button>
+            <button class="btn-custom btn-success" onclick="confirmPayment()">Xác nhận đã thu</button>
         </div>
-      </form>
     </div>
-  </div>
-  <script>
+</div>
+
+<!-- Info Modal -->
+<div class="modal-overlay" id="infoModal">
+    <div class="modal-content" style="max-width: 550px;">
+        <div class="modal-header">
+            <h5>Thông tin thanh toán</h5>
+            <button class="modal-close-btn" onclick="closeInfoModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div style="display: grid; gap: 12px;">
+                <div>
+                    <div style="font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: 600;">Mã xác
+                        nhận
+                    </div>
+                    <div style="font-size: 14px; color: #2c3e50;">XN20250120001</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: 600;">Ngày xác
+                        nhận
+                    </div>
+                    <div style="font-size: 14px; color: #2c3e50;">20/01/2025</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: 600;">Người xác
+                        nhận
+                    </div>
+                    <div style="font-size: 14px; color: #2c3e50;">Chủ trọ</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: 600;">Ghi chú
+                    </div>
+                    <div style="font-size: 14px; color: #2c3e50;">Thanh toán bằng tiền mặt</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-custom btn-secondary" onclick="closeInfoModal()">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="modal-overlay" id="createInvoiceModal">
+    <div class="modal-content" style="max-width: 700px;">
+        <form method="post" action="${pageContext.request.contextPath}/invoices">
+            <div class="modal-header">
+                <h5>Tạo hóa đơn</h5>
+                <button type="button" class="modal-close-btn"
+                        onclick="closeCreateModal()">×
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Phòng</label>
+                        <input name="roomId" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Người thuê</label>
+                        <input name="customerId" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="form-label">Tháng</label>
+                        <input type="number" name="month" min="1" max="12"
+                               class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Năm</label>
+                        <input type="number" name="year" value="2025"
+                               class="form-control" required>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h6>Dịch vụ</h6>
+
+                <!-- 1 dòng dịch vụ -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <input name="serviceCode" class="form-control"
+                               placeholder="Mã DV" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input name="quantity" type="number"
+                               class="form-control" placeholder="Số lượng" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input name="unitPrice" type="number"
+                               class="form-control" placeholder="Đơn giá" required>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn-custom btn-secondary"
+                        onclick="closeCreateModal()">Hủy
+                </button>
+                <button type="submit"
+                        class="btn-custom btn-primary-custom">Tạo hóa đơn
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
     function openCreateModal() {
-      document.getElementById('modalTitle').innerText = 'Tạo hóa đơn';
-      form.reset();
-      document.getElementById('invoicesCode').value = '';
-      modal.show();
+        document.getElementById('modalTitle').innerText = 'Tạo hóa đơn';
+        form.reset();
+        document.getElementById('invoicesCode').value = '';
+        modal.show();
     }
 
     // Set today's date
     document.getElementById('confirmDate').valueAsDate = new Date();
 
     function markAsPaid(invoiceCode) {
-      document.getElementById('invoiceCode').value = invoiceCode;
-      document.getElementById('paymentModal').classList.add('show');
+        document.getElementById('invoiceCode').value = invoiceCode;
+        document.getElementById('paymentModal').classList.add('show');
     }
 
     function closePaymentModal() {
-      document.getElementById('paymentModal').classList.remove('show');
+        document.getElementById('paymentModal').classList.remove('show');
     }
 
     function confirmPayment() {
-      alert('Hóa đơn đã được đánh dấu "Đã thu" thành công!');
-      closePaymentModal();
-      location.reload();
+        alert('Hóa đơn đã được đánh dấu "Đã thu" thành công!');
+        closePaymentModal();
+        location.reload();
     }
 
     function viewPaymentInfo() {
-      document.getElementById('infoModal').classList.add('show');
+        document.getElementById('infoModal').classList.add('show');
     }
 
     function closeInfoModal() {
-      document.getElementById('infoModal').classList.remove('show');
+        document.getElementById('infoModal').classList.remove('show');
     }
 
     function resetFilters() {
-      document.getElementById('statusFilter').value = '';
-      document.getElementById('roomFilter').value = '';
-      document.getElementById('invoiceSearch').value = '';
+        window.location.href = "${pageContext.request.contextPath}/invoices"
     }
 
     function toggleProfileMenu() {
-      const menu = document.getElementById('profileMenu');
-      menu.classList.toggle('show');
+        const menu = document.getElementById('profileMenu');
+        menu.classList.toggle('show');
     }
 
     function logout() {
-      window.location.href = 'login.jsp';
+        window.location.href = 'login.jsp';
     }
 
-    document.addEventListener('click', function(event) {
-      const menu = document.getElementById('profileMenu');
-      const btn = document.querySelector('.profile-btn');
-      if (menu && btn && !menu.contains(event.target) && !btn.contains(event.target)) {
-        menu.classList.remove('show');
-      }
+    document.addEventListener('click', function (event) {
+        const menu = document.getElementById('profileMenu');
+        const btn = document.querySelector('.profile-btn');
+        if (menu && btn && !menu.contains(event.target) && !btn.contains(event.target)) {
+            menu.classList.remove('show');
+        }
     });
 
-    document.getElementById('paymentModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closePaymentModal();
-      }
+    document.getElementById('paymentModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closePaymentModal();
+        }
     });
 
-    document.getElementById('infoModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeInfoModal();
-      }
+    document.getElementById('infoModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closeInfoModal();
+        }
     });
+
     function openCreateModal() {
-      document.getElementById('createInvoiceModal').classList.add('show');
+        document.getElementById('createInvoiceModal').classList.add('show');
     }
 
     function closeCreateModal() {
-      document.getElementById('createInvoiceModal').classList.remove('show');
+        document.getElementById('createInvoiceModal').classList.remove('show');
     }
-  </script>
-  </c:forEach>
+</script>
 </body>
 </html>
