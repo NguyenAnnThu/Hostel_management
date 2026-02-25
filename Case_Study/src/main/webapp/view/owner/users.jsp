@@ -23,28 +23,47 @@
             <a href="dashboard.jsp">Trang chủ</a> / <span>Người dùng</span>
         </div>
 
-        <div class="page-header">
+        <div class="page-header d-flex justify-content-between align-items-center">
             <h1 class="page-title">Quản lý Người dùng</h1>
-        </div>
 
-        <!-- Filters -->
+            <button class="btn btn-success"
+                    onclick="openAddUserModal()">
+                <i class="bi bi-plus-circle"></i> Thêm tài khoản
+            </button>
+        </div>
         <form method="get" action="${pageContext.request.contextPath}/users">
             <input type="hidden" name="action" value="filter">
 
-            <select name="status" class="form-control">
-                <option value="">-- Chọn trạng thái --</option>
-                <option value="active">Hoạt động</option>
-                <option value="locked">Bị khóa</option>
-            </select>
+            <div class="filter-section">
 
-            <input type="text" name="keyword" class="form-control" placeholder="Tên">
+                <div class="filter-group">
+                    <label>Trạng thái</label>
+                    <select name="status" class="form-control">
+                        <option value="">-- Chọn trạng thái --</option>
+                        <option value="active">Hoạt động</option>
+                        <option value="locked">Bị khóa</option>
+                    </select>
+                </div>
 
-            <button type="submit" class="btn-custom btn-primary-custom">Lọc</button>
+                <div class="filter-group">
+                    <label>Tên</label>
+                    <input type="text" name="keyword" class="form-control"  value="${param.keyword}" placeholder="Nhập tên">
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn-custom btn-primary-custom">
+                        <i class="bi bi-funnel"></i> Lọc
+                    </button>
+
+                    <a href="${pageContext.request.contextPath}/users"
+                       class="btn-custom btn-outline">
+                        Đặt lại
+                    </a>
+                </div>
+            </div>
         </form>
-        <button class="btn-custom btn-success"
-                onclick="openAddUserModal()">
-            + Thêm tài khoản
-        </button>
+
+
         <!-- Table -->
         <div class="card-custom">
             <div class="table-responsive">
@@ -93,7 +112,8 @@
                                                     '${u.address}',
                                                     '${u.dateOfBirth}',
                                                     '${u.status}',
-                                                    '${u.role}'
+                                                    '${u.role}',
+                                                    '${u.password}'
                                                     )">
                                         Xem
                                     </button>
@@ -109,7 +129,8 @@
                                                     '${u.address}',
                                                     '${u.dateOfBirth}',
                                                     '${u.status}',
-                                                    '${u.role}'
+                                                    '${u.role}',
+                                                    '${u.password}'
                                                     )">
                                         Sửa
                                     </button>
@@ -156,17 +177,26 @@
         </div>
 
         <form method="post" action="${pageContext.request.contextPath}/users">
-            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="action" id="formAction">
 
             <div class="modal-body">
-                <div class="form-group">
+                <div class="form-group" id="userIdGroup">
                     <label>ID</label>
                     <input type="text" id="userId" name="userId" class="form-control" readonly>
                 </div>
 
                 <div class="form-group">
                     <label>Role</label>
-                    <input type="text" id="role" class="form-control">
+                    <select id="role" name="role" class="form-control">
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="OWNER">OWNER</option>
+                        <option value="TENANT">TENANT</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input id="password" name="password" class="form-control" required>
                 </div>
 
                 <div class="form-group">
@@ -176,7 +206,7 @@
 
                 <div class="form-group">
                     <label>Số điện thoại</label>
-                    <input type="tel" id="phone" class="form-control" disabled>
+                    <input type="tel" name="phone" id="phone" class="form-control">
                 </div>
 
                 <div class="form-group">
@@ -199,7 +229,7 @@
                     <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-control">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="statusGroup">
                     <label>Trạng thái</label>
                     <select id="status" name="status" class="form-control">
                         <option value="active">Hoạt động</option>
@@ -219,7 +249,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
-    function setUserData(id, name, phone, email, citizenId, address, dob, status, role) {
+    function setUserData(id, name, phone, email, citizenId, address, dob, status, role, password) {
 
         document.getElementById("userId").value = id;
         document.getElementById("fullName").value = name;
@@ -230,14 +260,39 @@
         document.getElementById("dateOfBirth").value = dob;
         document.getElementById("status").value = status;
         document.getElementById("role").value = role;
+        document.getElementById("password").value = password;
     }
 
-    function viewUser(id, name, phone, email, citizenId, address, dob, status, role) {
+    function openAddUserModal() {
+
+        document.getElementById("userModalTitle").textContent = "Thêm tài khoản";
+        document.getElementById("saveBtnUser").style.display = "inline-block";
+        document.getElementById("userIdGroup").style.display = "none";
+        document.getElementById("statusGroup").style.display = "none";
+
+        // reset form TRƯỚC
+        document.querySelectorAll("#userModal input, #userModal select")
+            .forEach(el => {
+                el.disabled = false;
+                if (el.id !== "formAction") {
+                    el.value = "";
+                }
+            });
+
+        // set action SAU
+        document.getElementById("formAction").value = "add";
+
+        document.getElementById("userId").readOnly = true;
+
+        document.getElementById("userModal").classList.add("show");
+    }
+
+    function viewUser(id, name, phone, email, citizenId, address, dob, status, role, password) {
 
         document.getElementById("userModalTitle").textContent = "Xem Người dùng";
         document.getElementById("saveBtnUser").style.display = "none";
 
-        setUserData(id, name, phone, email, citizenId, address, dob, status, role);
+        setUserData(id, name, phone, email, citizenId, address, dob, status, role, password);
 
         document.querySelectorAll("#userModal input, #userModal select")
             .forEach(el => el.disabled = true);
@@ -245,20 +300,19 @@
         document.getElementById("userModal").classList.add("show");
     }
 
-    function editUser(id, name, phone, email, citizenId, address, dob, status, role) {
+    function editUser(id, name, phone, email, citizenId, address, dob, status, role, password) {
 
         document.getElementById("userModalTitle").textContent = "Chỉnh sửa Người dùng";
         document.getElementById("saveBtnUser").style.display = "inline-block";
-
-        setUserData(id, name, phone, email, citizenId, address, dob, status, role);
+        document.getElementById("formAction").value = "update";
+        setUserData(id, name, phone, email, citizenId, address, dob, status, role, password);
 
         document.querySelectorAll("#userModal input, #userModal select")
             .forEach(el => el.disabled = false);
 
         document.getElementById("userId").readOnly = true;   // sửa chỗ này
-        document.getElementById("phone").disabled = true;
+        document.getElementById("phone").readOnly = true;
         document.getElementById("role").disabled = true;
-
         document.getElementById("userModal").classList.add("show");
     }
 

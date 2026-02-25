@@ -29,9 +29,14 @@ public class UserController extends HttpServlet {
             String status = request.getParameter("status");
             String keyword = request.getParameter("keyword");
 
-            request.setAttribute("userList",
-                    userService.filter(status, keyword));
-
+//            request.setAttribute("userList",
+//                    userService.filter(status, keyword));
+            List<UserDto> list = userService.filter(status, keyword);
+            request.setAttribute("userList", list);
+            request.getRequestDispatcher("view/owner/users.jsp").forward(request, response);
+            System.out.println("Status = " + status);
+            System.out.println("Keyword = " + keyword);
+            return;
         } else {
             request.setAttribute("userList",
                     userService.getAll());
@@ -46,14 +51,17 @@ public class UserController extends HttpServlet {
             throws IOException {
 
         String action = request.getParameter("action");
-
+        System.out.println("ACTION = " + action);
         if (action == null) {
             response.sendRedirect(request.getContextPath() + "/users");
             return;
         }
 
         switch (action) {
-
+            case "add":
+                addUser(request);
+                response.sendRedirect(request.getContextPath() + "/users");
+                return;
             case "update":
                 updateUser(request);
                 response.sendRedirect(request.getContextPath() + "/users");
@@ -102,14 +110,43 @@ public class UserController extends HttpServlet {
                     request.getParameter("citizenId"),
                     request.getParameter("address"),
                     sdf.parse(request.getParameter("dateOfBirth")),
+
                     request.getParameter("status")
             );
-
+            user.setRole(request.getParameter("role"));
+            user.setPassword(request.getParameter("password"));
             boolean result = userService.update(user);
             System.out.println("Update result: " + result);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void addUser(HttpServletRequest request) {
+
+        try {
+
+            UserDto user = new UserDto(
+                    request.getParameter("userId"),
+                    request.getParameter("fullName"),
+                    request.getParameter("phone"),
+                    request.getParameter("email"),
+                    request.getParameter("citizenId"),
+                    request.getParameter("address"),
+                    sdf.parse(request.getParameter("dateOfBirth")),
+                    "active", // mặc định active
+                    request.getParameter("role"),
+                    request.getParameter("password")
+            );
+
+            userService.add(user);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("Phone: " + request.getParameter("phone"));
+        System.out.println("Role: " + request.getParameter("role"));
+        System.out.println("Password: " + request.getParameter("password"));
     }
 }

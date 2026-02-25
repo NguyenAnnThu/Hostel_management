@@ -27,6 +27,18 @@ public class UserDto {
         this.dateOfBirth = dateOfBirth;
         this.status = status;
     }
+    public UserDto(String userId, String fullName, String phone, String email, String citizenId, String address, Date dateOfBirth, String status, String role,  String password) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.email = email;
+        this.citizenId = citizenId;
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.status = status;
+        this.password = password;
+        this.role = role;
+    }
 
     public String getUserId() {
         return userId;

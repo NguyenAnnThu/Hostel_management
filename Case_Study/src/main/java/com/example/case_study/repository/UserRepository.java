@@ -69,11 +69,13 @@ public class UserRepository implements IUserRepository {
                     VALUES (?, ?, ?)
                 """;
 
-        try (Connection conn = DBConnection.getConnection()) {
+        Connection conn = null;
 
+        try {
+            conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
-
-            // insert users
+            String newUserId = generateUserId(conn);
+            user.setUserId(newUserId);
             try (PreparedStatement ps1 = conn.prepareStatement(insertUser)) {
 
                 ps1.setString(1, user.getUserId());
@@ -88,7 +90,6 @@ public class UserRepository implements IUserRepository {
                 ps1.executeUpdate();
             }
 
-            // insert accounts
             try (PreparedStatement ps2 = conn.prepareStatement(insertAccount)) {
 
                 ps2.setString(1, user.getPhone());
@@ -102,40 +103,26 @@ public class UserRepository implements IUserRepository {
             return true;
 
         } catch (Exception e) {
+
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
             e.printStackTrace();
-        }
+        } finally {
 
-        return false;
-    }
-
-    @Override
-    public boolean update(UserDto user) {
-
-        String sql = """
-                    UPDATE users 
-                    SET full_name = ?, 
-                        email = ?, 
-                        citizen_id = ?, 
-                        address = ?, 
-                        date_of_birth = ?, 
-                        status = ?
-                    WHERE user_id = ?
-                """;
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, user.getFullName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getCitizenId());
-            ps.setString(4, user.getAddress());
-            ps.setDate(5, new java.sql.Date(user.getDateOfBirth().getTime()));
-            ps.setString(6, user.getStatus());
-            ps.setString(7, user.getUserId());
-
-            return ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return false;
@@ -161,6 +148,67 @@ public class UserRepository implements IUserRepository {
         return false;
     }
 
+    public boolean update(UserDto user) {
+
+        String updateUser =
+                "UPDATE users SET full_name=?, email=?, citizen_id=?, address=?, date_of_birth=?, status=? WHERE user_id=?";
+
+        String updateAccount =
+                "UPDATE accounts SET password=? WHERE phone=?";
+
+        try (Connection conn = DBConnection.getConnection()) {
+
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement ps1 = conn.prepareStatement(updateUser);
+                 PreparedStatement ps2 = conn.prepareStatement(updateAccount)) {
+
+                ps1.setString(1, user.getFullName());
+                ps1.setString(2, user.getEmail());
+                ps1.setString(3, user.getCitizenId());
+                ps1.setString(4, user.getAddress());
+                ps1.setDate(5, new java.sql.Date(user.getDateOfBirth().getTime()));
+                ps1.setString(6, user.getStatus());
+                ps1.setString(7, user.getUserId());
+
+                ps1.executeUpdate();
+                int rows = ps1.executeUpdate();
+                System.out.println("Rows updated: " + rows);
+                ps2.setString(1, user.getPassword());
+                ps2.setString(2, user.getPhone());
+
+                ps2.executeUpdate();
+
+                conn.commit();
+                return true;
+
+            } catch (Exception e) {
+                conn.rollback();
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    private String generateUserId(Connection conn) throws Exception {
+
+        String sql = "SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                String lastId = rs.getString("user_id"); // ví dụ U00015
+                int number = Integer.parseInt(lastId.substring(1));
+                return String.format("U%05d", number + 1);
+            }
+        }
+
+        return "U00001"; // nếu chưa có user nào
+    }
     @Override
     public boolean delete(String userId) {
 
@@ -206,11 +254,11 @@ public class UserRepository implements IUserRepository {
     public UserDto findById(String userId) {
 
         String sql = """
-        SELECT u.*, a.role, a.password
-        FROM users u
-        LEFT JOIN accounts a ON u.phone = a.phone
-        WHERE u.user_id = ?
-    """;
+                    SELECT u.*, a.role, a.password
+                    FROM users u
+                    LEFT JOIN accounts a ON u.phone = a.phone
+                    WHERE u.user_id = ?
+                """;
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -259,7 +307,7 @@ public class UserRepository implements IUserRepository {
         }
 
         if (keyword != null && !keyword.isEmpty()) {
-            sql.append(" AND (full_name LIKE ? OR phone LIKE ?) ");
+            sql.append(" AND (u.full_name LIKE ? OR u.phone LIKE ?) ");
         }
 
         try (Connection conn = DBConnection.getConnection();
