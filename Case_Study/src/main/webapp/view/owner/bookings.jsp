@@ -1,216 +1,204 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Đặt phòng - Quản Lý Nhà Trọ</title>
-  <c:import url="../layout/library.jsp"></c:import>
+  <c:import url="../layout/library.jsp"/>
 </head>
 <body>
-  <!-- Sidebar -->
-  <c:import url="../layout/sidebar.jsp"></c:import>
+<c:import url="../layout/sidebar.jsp"/>
 
-  <!-- Main Wrapper -->
-  <div class="main-wrapper">
-    <!-- Top Navbar -->
-    <c:import url="../layout/topbar.jsp"></c:import>
+<div class="main-wrapper">
+  <c:import url="../layout/topbar.jsp"/>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <div class="breadcrumb-nav">
-        <a href="dashboard.jsp">Trang chủ</a> / <span>Đặt phòng</span>
-      </div>
+  <div class="main-content">
+    <div class="breadcrumb-nav">
+      <a href="dashboard.jsp">Trang chủ</a> / <span>Đặt phòng</span>
+    </div>
+    <div class="page-header">
+      <h1 class="page-title">Quản lý Đặt phòng</h1>
+    </div>
 
-      <div class="page-header">
-        <h1 class="page-title">Quản lý Đặt phòng</h1>
-      </div>
+    <!-- Filters -->
+    <div class="filter-section">
+      <form action="${pageContext.request.contextPath}/owner/bookings" method="get"
+            style="display:flex; flex-wrap:wrap; gap:inherit; align-items:flex-end; width:100%">
+        <input type="hidden" name="action" value="filter">
 
-      <!-- Filters -->
-      <div class="filter-section">
         <div class="filter-group">
           <label>Trạng thái</label>
-          <select id="statusFilter" class="form-control">
+          <select name="searchStatus" class="form-control">
             <option value="">-- Chọn trạng thái --</option>
-            <option value="chờ">Chờ xác nhận</option>
-            <option value="hủy">Hủy</option>
-            <option value="xác nhận">Xác nhận</option>
+            <c:forEach var="s" items="${statusList}">
+              <option value="${s}" ${selectedStatus == s ? 'selected' : ''}>
+                <c:choose>
+                  <c:when test="${s == 'confirmed'}">Xác nhận</c:when>
+                  <c:when test="${s == 'cancelled'}">Đã hủy</c:when>
+                  <c:when test="${s == 'expired'}">Hết hạn</c:when>
+                  <c:otherwise>${s}</c:otherwise>
+                </c:choose>
+              </option>
+            </c:forEach>
           </select>
         </div>
+
         <div class="filter-group">
-          <label>Tìm phòng/khách</label>
-          <input type="text" class="form-control" id="searchInput" placeholder="Mã phòng hoặc tên khách">
+          <label>Tìm phòng / khách</label>
+          <input type="text" name="searchKeyword" class="form-control"
+                 placeholder="Mã phòng hoặc tên khách"
+                 value="${searchKeyword}">
         </div>
+
         <div class="filter-actions">
-          <button class="btn-custom btn-primary-custom">
+          <button type="submit" class="btn-custom btn-primary-custom">
             <i class="bi bi-funnel"></i> Lọc
           </button>
-          <button class="btn-custom btn-outline" onclick="resetFilters()">
+          <button type="button" class="btn-custom btn-outline"
+                  onclick="window.location.href='${pageContext.request.contextPath}/owner/bookings'">
             <i class="bi bi-arrow-clockwise"></i> Đặt lại
           </button>
         </div>
-      </div>
+      </form>
+    </div>
 
-      <!-- Table -->
-      <div class="card-custom">
-        <div class="table-responsive">
-          <table class="table-custom">
-            <thead>
-              <tr>
-                <th>Phòng</th>
-                <th>Khách</th>
-                <th>Ngày đặt</th>
-                <th>Hạn</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>P101</strong></td>
-                <td>Nguyễn Văn A (0987654321)</td>
-                <td>20/01/2025</td>
-                <td>27/01/2025</td>
-                <td><span class="badge-custom badge-info">Chờ</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-success" onclick="confirmBooking()">Xác nhận thuê</button>
-                    <button class="btn-custom btn-danger">Hủy</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>P205</strong></td>
-                <td>Trần Thị B (0912345678)</td>
-                <td>19/01/2025</td>
-                <td>26/01/2025</td>
-                <td><span class="badge-custom badge-info">Chờ</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-success" onclick="confirmBooking()">Xác nhận thuê</button>
-                    <button class="btn-custom btn-danger">Hủy</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>P301</strong></td>
-                <td>Phạm Minh C (0901234567)</td>
-                <td>10/01/2025</td>
-                <td>17/01/2025</td>
-                <td><span class="badge-custom badge-danger">Hết hạn</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-success" onclick="confirmBooking()">Xác nhận thuê</button>
-                    <button class="btn-custom btn-danger">Hủy</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>P102</strong></td>
-                <td>Lê Thị D (0923456789)</td>
-                <td>25/12/2024</td>
-                <td>01/01/2025</td>
-                <td><span class="badge-custom badge-light">Đã hủy</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <span style="color: #7f8c8d; font-size: 12px;">Không hành động</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>P203</strong></td>
-                <td>Hoàng Văn E (0934567890)</td>
-                <td>15/01/2025</td>
-                <td>22/01/2025</td>
-                <td><span class="badge-custom badge-success">Xác nhận</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-custom btn-outline">Xem HĐ</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <!-- Table -->
+    <div class="card-custom">
+      <div class="table-responsive">
+        <table class="table-custom">
+          <thead>
+          <tr>
+            <th>Mã đặt</th>
+            <th>Phòng</th>
+            <th>Khách thuê</th>
+            <th>Ngày đặt</th>
+            <th>Hạn</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+          </tr>
+          </thead>
+          <tbody>
+          <c:forEach var="b" items="${bookings}">
+            <tr>
+              <td><strong>#${b.bookingId}</strong></td>
+              <td>${b.roomId}</td>
+              <td>${b.customerName} (${b.customerPhone})</td>
+              <td><fmt:formatDate value="${b.bookingDate}" pattern="dd/MM/yyyy"/></td>
+              <td><fmt:formatDate value="${b.expireDate}"  pattern="dd/MM/yyyy"/></td>
+              <td>
+                <c:choose>
+                  <c:when test="${b.status == 'confirmed'}">
+                    <span class="badge-custom badge-success">Xác nhận</span>
+                  </c:when>
+                  <c:when test="${b.status == 'cancelled'}">
+                    <span class="badge-custom badge-light">Đã hủy</span>
+                  </c:when>
+                  <c:when test="${b.status == 'expired'}">
+                    <span class="badge-custom badge-danger">Hết hạn</span>
+                  </c:when>
+                  <c:otherwise>
+                    <span class="badge-custom badge-info">Chờ</span>
+                  </c:otherwise>
+                </c:choose>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <c:choose>
+                    <%-- Chỉ booking đang chờ mới cho thao tác --%>
+                    <c:when test="${b.status != 'confirmed' && b.status != 'cancelled'}">
+                      <%-- Nút Xác nhận → mở modal tạo hợp đồng --%>
+                      <button class="btn-custom btn-success"
+                              onclick="openConfirmModal(${b.bookingId}, '${b.roomId}', '${b.customerName}')">
+                        Xác nhận thuê
+                      </button>
+                      <%-- Nút Hủy → POST cancel --%>
+                      <form method="post"
+                            action="${pageContext.request.contextPath}/owner/bookings"
+                            style="display:inline"
+                            onsubmit="return confirm('Hủy đặt phòng này?')">
+                        <input type="hidden" name="action"    value="cancel">
+                        <input type="hidden" name="bookingId" value="${b.bookingId}">
+                        <button type="submit" class="btn-custom btn-danger">Hủy</button>
+                      </form>
+                    </c:when>
+                    <c:when test="${b.status == 'confirmed'}">
+                      <span style="color:#27ae60; font-size:12px;">Đã xác nhận</span>
+                    </c:when>
+                    <c:otherwise>
+                      <span style="color:#7f8c8d; font-size:12px;">Không có thao tác</span>
+                    </c:otherwise>
+                  </c:choose>
+                </div>
+              </td>
+            </tr>
+          </c:forEach>
+
+          <c:if test="${empty bookings}">
+            <tr>
+              <td colspan="7" style="text-align:center; color:#7f8c8d;">
+                Không có dữ liệu
+              </td>
+            </tr>
+          </c:if>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Contract Modal -->
-  <div class="modal-overlay" id="contractModal">
-    <div class="modal-content" style="max-width: 550px;">
+<!-- Modal xác nhận → tạo hợp đồng -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-content" style="max-width:550px;">
+    <form method="post" action="${pageContext.request.contextPath}/owner/bookings">
+      <input type="hidden" name="action"    value="confirm">
+      <input type="hidden" name="bookingId" id="modalBookingId">
+
       <div class="modal-header">
-        <h5>Tạo Hợp đồng</h5>
-        <button class="modal-close-btn" onclick="closeContractModal()">×</button>
+        <h5>Xác nhận thuê phòng</h5>
+        <button type="button" class="modal-close-btn" onclick="closeConfirmModal()">×</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
           <label class="form-label">Phòng</label>
-          <input type="text" class="form-control" id="contractRoom" disabled>
+          <input type="text" class="form-control" id="modalRoom" disabled>
         </div>
         <div class="form-group">
           <label class="form-label">Người thuê</label>
-          <input type="text" class="form-control" id="contractTenant" disabled>
+          <input type="text" class="form-control" id="modalTenant" disabled>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Ngày bắt đầu</label>
-            <input type="date" class="form-control">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Ngày kết thúc</label>
-            <input type="date" class="form-control">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Tiền cọc (VND)</label>
-          <input type="number" class="form-control" placeholder="7000000">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Trạng thái</label>
-          <select class="form-control">
-            <option>Hiệu lực</option>
-            <option>Kết thúc</option>
-          </select>
-        </div>
+        <p style="color:#e67e22; font-size:13px;">
+          * Xác nhận sẽ cập nhật trạng thái đặt phòng thành "Đã xác nhận".
+          Vui lòng tạo hợp đồng tại trang Hợp đồng.
+        </p>
       </div>
       <div class="modal-footer">
-        <button class="btn-custom btn-secondary" onclick="closeContractModal()">Hủy</button>
-        <button class="btn-custom btn-primary-custom" onclick="saveContract()">Tạo hợp đồng</button>
+        <button type="button" class="btn-custom btn-secondary"
+                onclick="closeConfirmModal()">Hủy</button>
+        <button type="submit" class="btn-custom btn-success">Xác nhận</button>
       </div>
-    </div>
+    </form>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    function confirmBooking() {
-      document.getElementById('contractRoom').value = 'P101';
-      document.getElementById('contractTenant').value = 'Nguyễn Văn A';
-      document.getElementById('contractModal').classList.add('show');
-    }
+<script>
+  function openConfirmModal(bookingId, roomId, tenantName) {
+    document.getElementById('modalBookingId').value = bookingId;
+    document.getElementById('modalRoom').value      = roomId;
+    document.getElementById('modalTenant').value    = tenantName;
+    document.getElementById('confirmModal').classList.add('show');
+  }
 
-    function closeContractModal() {
-      document.getElementById('contractModal').classList.remove('show');
-    }
+  function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('show');
+  }
 
-    function saveContract() {
-      alert('Hợp đồng đã được tạo thành công!');
-      closeContractModal();
-      // Redirect to contracts page
-      window.location.href = 'contracts.jsp';
-    }
-
-    function resetFilters() {
-      document.getElementById('statusFilter').value = '';
-      document.getElementById('searchInput').value = '';
-    }
-
-    document.getElementById('contractModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeContractModal();
-      }
-    });
-  </script>
+  document.getElementById('confirmModal').addEventListener('click', function (e) {
+    if (e.target === this) closeConfirmModal();
+  });
+</script>
 </body>
 </html>

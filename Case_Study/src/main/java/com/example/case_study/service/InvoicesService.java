@@ -30,4 +30,19 @@ public class InvoicesService implements IInvoicesService {
     public Invoices findById(int invoiceId) {
         return invoicesRepo.findById(invoiceId);
     }
+
+    @Override
+    public List<String> getAllStatus() {
+        return invoicesRepo.getAllStatus();
+    }
+
+    @Override
+    public List<String> getAllRoomId() {
+        return invoicesRepo.getAllRoomId();
+    }
+
+    @Override
+    public List<Invoices> filter(Integer month, Integer year, String status, String roomId, String invoiceId) {
+        return invoicesRepo.filter(month, year, status, roomId, invoiceId);
+    }
 }

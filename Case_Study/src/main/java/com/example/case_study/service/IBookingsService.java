@@ -1,25 +1,16 @@
 package com.example.case_study.service;
 
+import com.example.case_study.dto.BookingDTO;
 import com.example.case_study.entity.Bookings;
+
 import java.util.List;
 
 public interface IBookingsService {
-
-    List<Bookings> getAllBookings();
-
+    List<BookingDTO> getAllBookings();
+    List<BookingDTO> filter(String status, String keyword);
+    BookingDTO findById(int bookingId);
+    boolean confirmBooking(int bookingId);
+    boolean cancelBooking(int bookingId);
+    List<String> getAllStatus();
     boolean addBooking(Bookings booking);
-
-    boolean updateBooking(Bookings booking);
-
-    boolean deleteBooking(int bookingId);
-
-    Bookings findById(int bookingId);
-
-    List<Bookings> findByRoomId(String roomId);
-
-    List<Bookings> findByCustomerId(String customerId);
-
-    List<Bookings> findByStatus(String status);
-
-    boolean updateStatus(int bookingId, String status);
 }
